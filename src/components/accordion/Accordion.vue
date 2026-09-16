@@ -54,6 +54,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@reference "../../styles/tailwind.css";
 .accordion {
     display: grid;
     grid-template-columns: 1fr;
@@ -122,7 +123,7 @@ onMounted(() => {
 
         &,
         &>.content {
-            @apply transition-easing-emphasized-accelerate transition-duration-emphasized-accelerate;
+            @apply ease-emphasized-accelerate duration-200;
         }
 
         &>.header {
@@ -153,7 +154,7 @@ onMounted(() => {
 
         &,
         &>.content {
-            @apply transition-easing-emphasized-decelerate transition-duration-emphasized-decelerate;
+            @apply ease-emphasized-decelerate duration-400;
         }
 
         &>.header {
@@ -201,7 +202,7 @@ onMounted(() => {
 
         & .icon {
             transition-property: transform;
-            @apply transition-easing-standard transition-duration-standard
+            @apply ease-standard duration-300
         }
     }
 

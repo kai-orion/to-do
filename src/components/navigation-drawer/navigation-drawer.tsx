@@ -1,7 +1,6 @@
 import { defineComponent, Teleport, type PropType } from 'vue'
 import { RouterLink } from 'vue-router'
-import { MediaQueryServiceSymbol } from '../../services/media-query.service'
-import type { NavLinkType } from '../../services/navigation.service'
+import type { NavLinkType } from '../../stores/navigation'
 import css from './navigation-drawer.module.css'
 
 export class NavigationDrawerComponent {
@@ -26,11 +25,6 @@ export class NavigationDrawerComponent {
         props: this.props,
         emits: {
             scrimClick: null
-        },
-        inject: {
-            mediaQuery: {
-                from: MediaQueryServiceSymbol
-            },
         },
         data: () => ({
         }),

@@ -58,14 +58,14 @@
 
 <script setup lang="ts">
 import type { MdDialog, MdFab, MdOutlinedSelect } from '@material/web/all'
-import { computed, inject, onMounted, ref } from 'vue'
-import { TodoEntity, TodoListServiceSymbol, type TodoListService } from '../../services/todo-list.service'
-import { TodoTabsServiceSymbol, type TodoTabsService } from '../../services/todo-tabs.service'
+import { computed, onMounted, ref } from 'vue'
+import { TodoEntity, useTodoListStore } from '../../stores/todo-list'
+import { useTodoTabsStore } from '../../stores/todo-tabs'
 
-const todoList = inject<TodoListService>(TodoListServiceSymbol)!
-const todoTabs = inject<TodoTabsService>(TodoTabsServiceSymbol)!
+const todoList = useTodoListStore()
+const todoTabs = useTodoTabsStore()
 
-const tabs = computed(() => todoTabs.tabs.value)
+const tabs = computed(() => todoTabs.tabs)
 
 const createTodoDialogRef = ref<MdDialog | null>(null)
 const openCreateTodoDialogRef = ref<MdFab | null>(null)

@@ -50,29 +50,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { Header } from '../components/header/header'
 import { NavigationDrawer } from '../components/navigation-drawer/navigation-drawer'
-import { MaterialThemeConfigurationService, MaterialThemeConfigurationServiceSymbol } from '../services/material-theme-configuration.service'
-import { MediaQueryServiceSymbol, type MediaQueryService } from '../services/media-query.service'
-import { NavigationServiceSymbol, type NavigationService } from '../services/navigation.service'
+import { useMaterialThemeStore } from '../stores/material-theme'
+import { useMediaQueryStore } from '../stores/media-query'
+import { useNavigationStore } from '../stores/navigation'
 
-const theme = inject<MaterialThemeConfigurationService>(MaterialThemeConfigurationServiceSymbol)!
-const navigation = inject<NavigationService>(NavigationServiceSymbol)!
-const mediaQuery = inject<MediaQueryService>(MediaQueryServiceSymbol)!
+const theme = useMaterialThemeStore()
+const navigation = useNavigationStore()
+const mediaQuery = useMediaQueryStore()
 
-const modal = computed(() => mediaQuery.configuration.value.currentBreakpoint === 'compact')
+const modal = computed(() => mediaQuery.currentBreakpoint === 'compact')
 const isDark = computed(() => theme.isDark)
 const setIsDark = (isDark: boolean) => {
-    theme.isDark = isDark
+    theme.setIsDark(isDark)
 }
-const navigationDrawerOpen = computed(() => navigation.open.value)
+const navigationDrawerOpen = computed(() => navigation.open)
 const setNavigationDrawerOpen = (open: boolean) => {
-    navigation.open.value = open
+    navigation.setOpen(open)
 }
 </script>
 
 <style scoped>
+@reference "../styles/tailwind.css";
 .product-page-layout {
     &>.content-view {
         display: grid;
@@ -144,14 +145,14 @@ const setNavigationDrawerOpen = (open: boolean) => {
         }
 
         &:not(.nav-open)>.content {
-            @apply transition-easing-emphasized-accelerate transition-duration-emphasized-accelerate;
+            @apply ease-emphasized-accelerate duration-200;
         }
 
         &.nav-open {
             --content-view-content-margin: 8px;
 
             &>.content {
-                @apply transition-easing-emphasized-decelerate transition-duration-emphasized-decelerate;
+                @apply ease-emphasized-decelerate duration-400;
             }
         }
 

@@ -1,7 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@tailwind variants;
+@import "tailwindcss";
+
+@import "@sandlada/material-design-css/preset.css";
+@import "@sandlada/material-design-css/prebuilt-colors/tonal-spot/h0-2025.css";
+@import "@sandlada/material-design-css/prebuilt-palettes/tonal-spot/h0-2025.css";
+@import "@sandlada/material-design-css/color/tw.css";
+@import "@sandlada/material-design-css/palette/tw.css";
+@import "@sandlada/material-design-css/shape/tw.css";
+@import "@sandlada/material-design-css/spacing/tw.css";
+@import "@sandlada/material-design-css/typography/tw.css";
+@import "@sandlada/material-design-css/motion/tw.css";
+
+@theme {
+    --font-weight-thin: 100;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+    --font-weight-black: 900;
+}
 
 @layer base {
 

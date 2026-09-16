@@ -28,3 +28,12 @@ package-lock.json
 
 build
 docs
+# Playwright CLI output (may contain credentials)
+.playwright-cli/
+
+# AI
+.claude
+!.claude/skills
+.gemini
+.codex
+.jules

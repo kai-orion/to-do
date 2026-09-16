@@ -42,10 +42,10 @@
 
 <script setup lang="ts">
 import type { MdDialog, MdOutlinedTextField, MdPrimaryTab } from '@material/web/all'
-import { inject, onMounted, ref } from 'vue'
-import { TodoTabsServiceSymbol, type TodoTabsService } from '../../services/todo-tabs.service'
+import { onMounted, ref } from 'vue'
+import { useTodoTabsStore } from '../../stores/todo-tabs'
 
-const todoTabs = inject<TodoTabsService>(TodoTabsServiceSymbol)!
+const todoTabs = useTodoTabsStore()
 
 const createCollectionDialogRef = ref<MdDialog | null>(null)
 const openCreateCollectionDialogRef = ref<MdPrimaryTab | null>(null)

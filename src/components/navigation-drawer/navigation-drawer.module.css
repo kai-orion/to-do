@@ -1,3 +1,4 @@
+@reference "../../styles/tailwind.css";
 .navigation-drawer {
     display: grid;
     grid-template-columns: 1fr;
@@ -33,19 +34,19 @@
     opacity,
     color,
     background-color;
-    @apply transition-easing-emphasized-decelerate transition-duration-emphasized-decelerate;
+    @apply ease-emphasized-decelerate duration-400;
 
     &:not(.open) {
         pointer-events: none;
 
         &:not(.modal) {
-            @apply transition-easing-emphasized-accelerate transition-duration-emphasized-accelerate;
+            @apply ease-emphasized-accelerate duration-200;
             width: 0px;
             opacity: 0;
         }
 
         &.modal {
-            @apply transition-easing-emphasized-accelerate transition-duration-emphasized-accelerate;
+            @apply ease-emphasized-accelerate duration-200;
             width: 0px;
             opacity: 0;
         }
@@ -123,10 +124,10 @@
     inset: 0;
 
     transition-property: opacity;
-    @apply transition-easing-emphasized-decelerate transition-duration-emphasized-decelerate;
+    @apply ease-emphasized-decelerate duration-400;
 
     &:not(.open) {
-        @apply transition-easing-emphasized-accelerate transition-duration-emphasized-accelerate;
+        @apply ease-emphasized-accelerate duration-200;
         opacity: 0;
         pointer-events: none;
     }

@@ -1,72 +1,51 @@
-import { EMaterialContrastLevel, EMaterialVariant, MaterialTokens, type TMaterialContrastLevel, type TMaterialVariant } from '@glare-labs/material-tokens-generator'
-import { Hct } from '@material/material-color-utilities'
-import { defineComponent, type PropType, type SlotsType } from 'vue'
+import { defineComponent, onMounted, watch } from 'vue'
+import { useMaterialThemeStore } from '../../stores/material-theme'
 
-class MaterialThemeProviderComponent {
-    private readonly props = {
-        isDark: {
-            type: Boolean as PropType<boolean>,
-            default: false,
-        },
-        hctToInt: {
-            type: Number as PropType<number>,
-            default: 4278453252,
-        },
-        contrastLevel: {
-            type: Number as PropType<number | TMaterialContrastLevel>,
-            default: EMaterialContrastLevel.Default,
-        },
-        variant: {
-            type: Number as PropType<number | TMaterialVariant>,
-            default: EMaterialVariant.Content,
-        },
-    }
+export const MaterialThemeProvider = defineComponent({
+    name: 'MaterialThemeProvider',
+    setup(_, { slots }) {
+        const theme = useMaterialThemeStore()
 
-    private readonly slots = {} as SlotsType<{
-        default: void
-    }>
-
-    public component = defineComponent({
-        name: 'MaterialThemeProvider',
-        props: this.props,
-        slots: this.slots,
-        methods: {
-            createStyleElement() {
-                if((this.$el as HTMLElement).querySelector('#material-theme-styles')) {
-                    return
-                }
-                const styleElement = document.createElement('style')
-                styleElement.setAttribute('id', 'material-theme-styles');
-                (this.$el as HTMLElement).appendChild(styleElement)
-            },
-            createStyle() {
-                const cssText = new MaterialTokens(Hct.fromInt(this.hctToInt), {
-                    contrastLevel: this.contrastLevel,
-                    isDark: this.isDark,
-                    variant: this.variant as TMaterialVariant,
-                }).getCssText();
-                return cssText
-            },
-            setStyle(styleElement: HTMLElement, cssText: string) {
-                styleElement.textContent = `.material-theme-provider-scoped, :root {${cssText}}`
+        function ensureStyleElement(host: HTMLElement): HTMLElement {
+            let styleElement = host.querySelector('#material-theme-styles')
+            if (!styleElement) {
+                styleElement = document.createElement('style')
+                styleElement.setAttribute('id', 'material-theme-styles')
+                host.appendChild(styleElement)
             }
-        },
-        mounted() {
-            this.createStyleElement()
-            this.setStyle((this.$el as HTMLElement).querySelector('#material-theme-styles')!, this.createStyle())
-        },
-        updated() {
-            this.createStyleElement()
-            this.setStyle((this.$el as HTMLElement).querySelector('#material-theme-styles')!, this.createStyle())
-        },
-        render() {
-            return (
-                <div class="material-theme-provider-scoped">
-                    {this.$slots['default'] && this.$slots.default()}
-                </div>
-            )
+            return styleElement as HTMLElement
         }
-    })
-}
 
-export const MaterialThemeProvider = new MaterialThemeProviderComponent().component
+        function applyTheme(host: HTMLElement) {
+            const styleElement = ensureStyleElement(host)
+            styleElement.textContent = `.material-theme-provider-scoped, :root {${theme.cssText}}`
+            document.documentElement.toggleAttribute('dark', theme.isDark)
+        }
+
+        let hostRef: HTMLElement | null = null
+
+        onMounted(() => {
+            if (hostRef) {
+                applyTheme(hostRef)
+            }
+        })
+
+        watch(
+            () => [theme.cssText, theme.isDark],
+            () => {
+                if (hostRef) {
+                    applyTheme(hostRef)
+                }
+            }
+        )
+
+        return () => (
+            <div
+                class="material-theme-provider-scoped"
+                ref={(el: unknown) => { hostRef = el as HTMLElement | null }}
+            >
+                {slots.default && slots.default()}
+            </div>
+        )
+    }
+})

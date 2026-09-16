@@ -1,7 +1,7 @@
 <template>
     <Product>
 
-        <div class="bg-primary-container shape-large m-4 p-8">
+        <div class="bg-primary-container rounded-large m-4 p-8">
             <h1 class="text-on-primary-container text-display-large font-black">Settings</h1>
         </div>
 
@@ -20,7 +20,7 @@
                         <span class="title">Dark Mode</span>
                         <md-switch
                             name="is-dark"
-                            :selected="theme.configuration.isDark"
+                            :selected="theme.isDark"
                         ></md-switch>
                     </label>
 
@@ -50,7 +50,7 @@
                             min="-1"
                             max="1"
                             step="0.5"
-                            :value="theme.configuration.contrastLevel"
+                            :value="theme.contrastLevel"
                         ></md-slider>
                     </label>
 
@@ -62,7 +62,7 @@
                             min="0"
                             max="360"
                             step="1"
-                            :value="theme.configuration.hct.hue"
+                            :value="theme.hue"
                         ></md-slider>
                     </label>
                     <label class="col">
@@ -73,7 +73,7 @@
                             min="0"
                             max="150"
                             step="1"
-                            :value="theme.configuration.hct.chroma"
+                            :value="theme.chroma"
                         ></md-slider>
                     </label>
                     <label class="col">
@@ -84,7 +84,7 @@
                             min="0"
                             max="100"
                             step="1"
-                            :value="theme.configuration.hct.tone"
+                            :value="theme.tone"
                         ></md-slider>
                     </label>
 
@@ -108,31 +108,30 @@
 </template>
 
 <script setup lang="ts">
-import type { TMaterialVariant } from '@glare-labs/material-tokens-generator'
+import type { TMaterialVariant } from '@sandlada/mcu-helper'
 import type { MdOutlinedSelect, MdSlider, MdSwitch } from '@material/web/all'
-import { inject } from 'vue'
 import Accordion from '../components/accordion/Accordion.vue'
 import Accordions from '../components/accordion/Accordions.vue'
 import Product from '../layouts/Product.vue'
-import { MaterialThemeConfigurationServiceSymbol, MaterialVariants, type MaterialThemeConfigurationService } from '../services/material-theme-configuration.service'
+import { MaterialVariants, useMaterialThemeStore } from '../stores/material-theme'
 
-const theme = inject<MaterialThemeConfigurationService>(MaterialThemeConfigurationServiceSymbol)!
+const theme = useMaterialThemeStore()
 const themeFormChange = (e: Event) => {
     const target = e.target
     const name = (target as HTMLInputElement).getAttribute('name')
 
     if (name === 'is-dark') {
-        theme.isDark = (target as MdSwitch).selected
+        theme.setIsDark((target as MdSwitch).selected)
     } else if (name === 'contrast-level') {
-        theme.contrastLevel = (target as MdSlider).value!
+        theme.setContrastLevel((target as MdSlider).value!)
     } else if (name === 'variant') {
-        theme.variant = Number((target as MdOutlinedSelect).value) as TMaterialVariant
+        theme.setVariant(Number((target as MdOutlinedSelect).value) as TMaterialVariant)
     } else if (name === 'hue') {
-        theme.hct.hue = (target as MdSlider).value!
+        theme.setHue((target as MdSlider).value!)
     } else if (name === 'chroma') {
-        theme.hct.chroma = (target as MdSlider).value!
+        theme.setChroma((target as MdSlider).value!)
     } else if (name === 'tone') {
-        theme.hct.tone = (target as MdSlider).value!
+        theme.setTone((target as MdSlider).value!)
     }
 }
 
@@ -143,6 +142,7 @@ const deleteWebsiteData = () => {
 </script>
 
 <style scoped>
+@reference "../styles/tailwind.css";
 .setting-form {
     display: flex;
     flex-direction: column;

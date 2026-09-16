@@ -71,15 +71,15 @@
 
 <script setup lang="ts">
 import type { MdPrimaryTab, MdTabs } from '@material/web/all'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import CreateCollectionTab from '../components/create-collection/CreateCollectionTab.vue'
 import CreateTodoFab from '../components/create-todo/CreateTodoFab.vue'
 import Product from '../layouts/Product.vue'
-import { TodoListServiceSymbol, type ITodo, type TodoListService } from '../services/todo-list.service'
-import { TodoTabsServiceSymbol, type TodoTabsService } from '../services/todo-tabs.service'
+import { useTodoListStore, type ITodo } from '../stores/todo-list'
+import { useTodoTabsStore } from '../stores/todo-tabs'
 
-const todoTabs = inject<TodoTabsService>(TodoTabsServiceSymbol)!
-const todoList = inject<TodoListService>(TodoListServiceSymbol)!
+const todoTabs = useTodoTabsStore()
+const todoList = useTodoListStore()
 
 const setCompleteField = (todo: ITodo) => {
     todoList.completeField(todo, !todo.isCompleted)
@@ -91,13 +91,13 @@ const removeTodoItem = (todo: ITodo) => {
     todoList.remove(todo)
 }
 const removeCurrentTab = () => {
-    const index = todoTabs.tabs.value.findIndex(e => e.label === currentCollectionName.value)
+    const index = todoTabs.tabs.findIndex(e => e.label === currentCollectionName.value)
     todoTabs.remove({ label: currentCollectionName.value })
-    currentCollectionName.value = index - 1 !== -1 && todoTabs.tabs.value.length >= 2 ? todoTabs.tabs.value[index - 1].label : todoTabs.tabs.value[0].label
+    currentCollectionName.value = index - 1 !== -1 && todoTabs.tabs.length >= 2 ? todoTabs.tabs[index - 1].label : todoTabs.tabs[0].label
 }
 
 const currentCollectionName = ref<string>('All')
-const allTodos = computed(() => todoList.todos.value)
+const allTodos = computed(() => todoList.todos)
 const currentCollectionTodos = computed(() =>
     allTodos.value
         .filter(e => e.data.collectionName === currentCollectionName.value)
@@ -106,7 +106,7 @@ const currentCollectionTodos = computed(() =>
         .sort((a, _) => a.isCompleted ? 1 : -1)
 )
 
-const tabs = computed(() => todoTabs.tabs.value)
+const tabs = computed(() => todoTabs.tabs)
 const tabsRef = ref<MdTabs | null>(null)
 
 onMounted(() => {
@@ -121,6 +121,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@reference "../styles/tailwind.css";
 .todo-list {
     padding-left: 8px;
     padding-right: 8px;

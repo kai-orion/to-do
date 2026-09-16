@@ -1,10 +1,5 @@
 <template>
-    <MaterialThemeProvider 
-        :hctToInt="mdConfig.hct.toInt()" 
-        :contrast-level="mdConfig.contrastLevel" 
-        :variant="mdConfig.variant" 
-        :is-dark="mdConfig.isDark"
-    >
+    <MaterialThemeProvider>
 
         <RouterView v-slot="{ Component }">
             <component :is="Component"></component>
@@ -14,13 +9,11 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, onBeforeUnmount, onMounted } from 'vue';
+import { onBeforeUnmount, onMounted } from 'vue';
 import {MaterialThemeProvider} from './components/material-provider/material-theme-provider';
-import { type IMaterialThemeConfigurationService, MaterialThemeConfigurationServiceSymbol } from './services/material-theme-configuration.service'
-import { MediaQueryService, MediaQueryServiceSymbol } from './services/media-query.service';
+import { useMediaQueryStore } from './stores/media-query';
 
-const mdConfig = inject<IMaterialThemeConfigurationService>(MaterialThemeConfigurationServiceSymbol)!
-const mediaQuery = inject<MediaQueryService>(MediaQueryServiceSymbol)!
+const mediaQuery = useMediaQueryStore()
 
 const onWindowResize = () => {
     mediaQuery.onWindowResize(window, document.body)
