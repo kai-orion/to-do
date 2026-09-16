@@ -1,56 +1,63 @@
+import type { BreakpointObserverInstance, BreakpointState, WidthBreakpointMap } from '@sandlada/breakpoint'
+import { createBreakpointObserver } from '@sandlada/breakpoint'
 import { defineStore } from 'pinia'
+import type { Subscription } from 'rxjs'
 import { ref } from 'vue'
 
-export type MediaBreakpointType = {
-    min: number | -1
-    max: number | -1
+export const MEDIA_WIDTH_BREAKPOINTS: WidthBreakpointMap = {
+    compact: '< 600px',
+    medium: { and: ['>= 600px', '< 840px'] },
+    expanded: { and: ['>= 840px', '< 1200px'] },
+    large: { and: ['>= 1200px', '< 1600px'] },
+    'extra-large': '>= 1600px',
 }
 
-export const MEDIA_BREAKPOINTS: Record<string, MediaBreakpointType> = {
-    compact: {
-        min: -1,
-        max: 600
-    },
-    medium: {
-        min: 600,
-        max: 840
-    },
-    expanded: {
-        min: 840,
-        max: 1200
-    },
-    large: {
-        min: 1200,
-        max: 1600
-    },
-    'extra-large': {
-        min: 1600,
-        max: -1
-    }
-}
+const MEDIA_BREAKPOINT_KEYS = Object.keys(MEDIA_WIDTH_BREAKPOINTS)
 
 export const useMediaQueryStore = defineStore('media-query', () => {
     const currentWidth = ref<number>(0)
     const currentBreakpoint = ref<string>('compact')
 
-    function onWindowResize(window: Window, target: HTMLElement) {
-        currentWidth.value = window.innerWidth
+    let observer: BreakpointObserverInstance | null = null
+    let subscription: Subscription | null = null
+    let target: HTMLElement | null = null
 
-        for (const [k, v] of Object.entries(MEDIA_BREAKPOINTS)) {
-            if ((v.min === -1 || currentWidth.value >= v.min) && (v.max === -1 || currentWidth.value < v.max)) {
-                currentBreakpoint.value = k
-            }
-        }
+    function syncBodyClass(breakpoint: string) {
+        if (!target) return
+        MEDIA_BREAKPOINT_KEYS.filter((key) => key !== breakpoint).forEach((key) => target!.removeAttribute(key))
+        if (target.hasAttribute(breakpoint)) return
+        target.setAttribute(breakpoint, ``)
+    }
 
-        target.classList.remove(...Object.keys(MEDIA_BREAKPOINTS).filter(e => e !== currentBreakpoint.value))
-        if (!target.classList.contains(currentBreakpoint.value)) {
-            target.classList.add(currentBreakpoint.value)
-        }
+    function applyState(state: BreakpointState) {
+        currentWidth.value = state.width
+        currentBreakpoint.value = state.primaryWidthBreakpoint ?? 'compact'
+        syncBodyClass(currentBreakpoint.value)
+    }
+
+    function start(element: HTMLElement) {
+        stop()
+        target = element
+        observer = createBreakpointObserver({
+            dimension: 'width',
+            widthBreakpoints: MEDIA_WIDTH_BREAKPOINTS,
+        })
+        applyState(observer.snapshot)
+        subscription = observer.state$.subscribe(applyState)
+    }
+
+    function stop() {
+        subscription?.unsubscribe()
+        subscription = null
+        observer?.dispose()
+        observer = null
+        target = null
     }
 
     return {
         currentWidth,
         currentBreakpoint,
-        onWindowResize,
+        start,
+        stop,
     }
 })

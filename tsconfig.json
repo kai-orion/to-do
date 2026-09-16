@@ -1,41 +1,56 @@
 {
-  "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "build",
-    "module": "ES2022",
-    "target": "ES2022",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "moduleResolution": "Bundler",
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
-    "verbatimModuleSyntax": true,
-    "useDefineForClassFields": true,
-    "experimentalDecorators": true,
-    "noEmit": true,
-    "allowJs": false,
-    "composite": true,
-    "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "isolatedDeclarations": false,
-    "strict": true,
-    "paths": {
-      "@components/*": ["/src/components/*"],
-      "@pages/*": ["/src/pages/*"],
-      "@router/*": ["/src/router/*"],
-      "@services/*": ["/src/services/*"],
-      "@styles/*": ["/src/styles/*"],
-      "@utils/*": ["/src/utils/*"],
+    "compilerOptions": {
+        "rootDir": ".",
+        "outDir": "build",
+        "module": "ESNext",
+        "target": "ESNext",
+        "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "moduleResolution": "Bundler",
+        "jsx": "preserve",
+        "jsxImportSource": "vue",
+        "verbatimModuleSyntax": true,
+        "useDefineForClassFields": true,
+        "experimentalDecorators": true,
+        "noEmit": true,
+        "allowJs": false,
+        "composite": true,
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "isolatedDeclarations": false,
+        "strict": true,
+        "paths": {
+            "@components/*": [
+                "/src/components/*"
+            ],
+            "@pages/*": [
+                "/src/pages/*"
+            ],
+            "@router/*": [
+                "/src/router/*"
+            ],
+            "@services/*": [
+                "/src/services/*"
+            ],
+            "@styles/*": [
+                "/src/styles/*"
+            ],
+            "@utils/*": [
+                "/src/utils/*"
+            ],
+        },
+        "types": [
+            "vite/client",
+            "type-fest"
+        ]
     },
-    "types": ["vite/client", "type-fest"]
-  },
-  "include": [
-    "src/**/*.vue",
-    "src/**/*.tsx",
-    "src/**/*.ts",
-    "vite.config.ts"
-  ],
+    "include": [
+        "src/**/*.vue",
+        "src/**/*.tsx",
+        "src/**/*.ts",
+        "vite.config.ts"
+    ],
 }

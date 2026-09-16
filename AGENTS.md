@@ -13,12 +13,13 @@ No test, lint, or format scripts exist. `fake-indexeddb` is a dep reserved for f
 
 ## Architecture
 
-- Entry: `index.html` → `src/main.ts` (single `import '@material/web/all'` + Pinia + `globalRouter`) → `src/App.vue` (`MaterialThemeProvider` + `RouterView`, owns window `resize` listener) → `src/pages/` via `src/layouts/Product.vue`.
+- Entry: `index.html` → `src/main.ts` (single `import '@material/web/all'` + Pinia + `globalRouter`) → `src/App.vue` (`MaterialThemeProvider` + `RouterView`, starts/stops the `media-query` observer) → `src/pages/` via `src/layouts/Product.vue`.
 - Router `src/router/index.ts`: only `/` and `/settings`. Must stay `createWebHashHistory` — static hosting under `docs/` has no SPA fallback.
 - Stores (`src/stores/`, Pinia setup-style `ref` + explicit `save()`): `todo-list`, `todo-tabs`, `material-theme`, `media-query`, `navigation`. No cross-store imports except components composing them.
 - Theme: `src/components/material-provider/material-theme-provider.tsx` injects `theme.cssText` (built with `createTheme`/`toCSS` from `@sandlada/mcu-helper`, `specVersion: '2025'`) into `<style id="material-theme-styles">` scoped to `.material-theme-provider-scoped, :root`, and toggles the `dark` attribute on `<html>`. `material-theme.ts` reads both flat and legacy `{ configuration: {...} }` persisted shapes — keep that compat.
-- Breakpoints: `media-query` store maps `innerWidth` to `compact/medium/expanded/large/extra-large` and syncs the class onto `document.body`. `Product.vue` treats `compact` as modal drawer. Never hardcode `600px` elsewhere; read the store.
+- Breakpoints: `media-query` store wraps `createBreakpointObserver` from `@sandlada/breakpoint` (`MEDIA_WIDTH_BREAKPOINTS`, keys `compact/medium/expanded/large/extra-large`, `dimension: 'width'`, `start(el)`/`stop()` lifecycle from `App.vue`) and syncs `currentWidth`/`currentBreakpoint` plus the breakpoint class onto `document.body`. `rxjs` is a direct dep (observer peer dep). `Product.vue` treats `compact` as modal drawer. Never hardcode `600px` elsewhere; read the store.
 - Components mix `.vue` SFCs and `.tsx` + `.module.css` (see `header/`, `navigation-drawer/`).
+- Design target: `prototype/` holds the goal-state UI references (currently `all-task.demo.png`, the Google Tasks multi-list board to replicate). It is the source of truth for task-list layout — consult it before building or changing task UI; the current `src/` implementation may not match it yet.
 
 ## Conventions & gotchas
 
