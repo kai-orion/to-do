@@ -1,10 +1,13 @@
-@import "tailwindcss";
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@import "./preflight.css" layer(base);
 
 @import "@sandlada/material-design-css/preset.css";
 @import "@sandlada/material-design-css/prebuilt-colors/tonal-spot/h0-2025.css";
-@import "@sandlada/material-design-css/prebuilt-palettes/tonal-spot/h0-2025.css";
 @import "@sandlada/material-design-css/color/tw.css";
-@import "@sandlada/material-design-css/palette/tw.css";
 @import "@sandlada/material-design-css/shape/tw.css";
 @import "@sandlada/material-design-css/spacing/tw.css";
 @import "@sandlada/material-design-css/typography/tw.css";
@@ -28,9 +31,16 @@
     body {
         font-family: "Noto Sans";
     }
+
+    /* @material/web dialogs center via `margin: inherit` on the inner native
+       dialog; the preflight `* { margin: 0 }` reset breaks that and pins
+       dialogs to the top-left. Restore auto margins on the host. */
+    md-dialog {
+        margin: auto;
+    }
 }
 
-@layer components {}
+
 
 @layer utilities {
     @keyframes icon-fill {

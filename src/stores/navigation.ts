@@ -21,7 +21,7 @@ export const useNavigationStore = defineStore('navigation', () => {
         },
     ]
 
-    const open = ref(false)
+    const open = ref(true)
 
     function setOpen(value: boolean) {
         open.value = value

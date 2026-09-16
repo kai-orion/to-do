@@ -161,4 +161,46 @@ const setNavigationDrawerOpen = (open: boolean) => {
         }
     }
 }
+
+/* Expanded and above: the document scrolls instead of the inner content
+   pane, and the header sticks to the viewport top. Breakpoints arrive as
+   attributes on <html> from the media-query store — no hardcoded px here. */
+html:is([expanded], [large], [extra-large]) .product-page-layout {
+    max-height: none;
+    overflow: visible;
+
+    &>.content-view {
+        max-height: none;
+        overflow: visible;
+
+        &>:is(.content, .navigation-drawer) {
+            max-height: none;
+        }
+
+        &>.content {
+            overflow: visible;
+            /* allow the 1fr column to shrink below the board's
+               min-content width instead of blowing out horizontally */
+            min-width: 0;
+        }
+
+        &>.navigation-drawer {
+            align-self: start;
+            position: sticky;
+            top: var(--header-height);
+            height: calc(100svh - var(--header-height));
+            min-height: 0;
+            max-height: calc(100svh - var(--header-height));
+            overflow: auto;
+        }
+    }
+}
+
+/* The header may be slotted content from a page (not this component's own
+   element), so it carries no scoped attribute — match it globally. */
+:global(html:is([expanded], [large], [extra-large]) .product-page-layout > header) {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
 </style>

@@ -37,3 +37,15 @@ docs
 .gemini
 .codex
 .jules
+.playwright
+.playwright-cli
+.playwright-mcp
+prototype
+superpowers
+docs/superpowers
+.claude/superpowers
+*.md
+!README.md
+!SECURITY.md
+!CODE_OF_CONDUCT.md
+!LICENSE

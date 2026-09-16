@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TMaterialVariant } from '@sandlada/mcu-helper'
+import type { TMaterialContrastLevel, TMaterialVariant } from '@sandlada/mcu-helper'
 import type { MdOutlinedSelect, MdSlider, MdSwitch } from '@material/web/all'
 import Accordion from '../components/accordion/Accordion.vue'
 import Accordions from '../components/accordion/Accordions.vue'
@@ -123,7 +123,7 @@ const themeFormChange = (e: Event) => {
     if (name === 'is-dark') {
         theme.setIsDark((target as MdSwitch).selected)
     } else if (name === 'contrast-level') {
-        theme.setContrastLevel((target as MdSlider).value!)
+        theme.setContrastLevel((target as MdSlider).value! as unknown as TMaterialContrastLevel)
     } else if (name === 'variant') {
         theme.setVariant(Number((target as MdOutlinedSelect).value) as TMaterialVariant)
     } else if (name === 'hue') {

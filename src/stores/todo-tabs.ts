@@ -29,8 +29,10 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
     const tabs = ref<Array<ITodoTab>>(loadFromStorage() ?? [])
 
     if (tabs.value.length === 0) {
-        tabs.value.push({ label: 'All' })
-        tabs.value.push({ label: 'Pinned' })
+        tabs.value.push({ label: 'Today' })
+        tabs.value.push({ label: 'Blog' })
+        tabs.value.push({ label: 'MDC' })
+        tabs.value.push({ label: 'Concepts' })
         saveToStorage(tabs.value)
     }
 
@@ -44,9 +46,43 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
         saveToStorage(tabs.value)
     }
 
+    function persist() {
+        saveToStorage(tabs.value)
+    }
+
+    function renameTab(oldName: string, next: string): boolean {
+        if (tabs.value.some(t => t.label === next)) return false
+        const tab = tabs.value.find(t => t.label === oldName)
+        if (!tab) return false
+        tab.label = next
+        saveToStorage(tabs.value)
+        return true
+    }
+
+    function removeTab(label: string): boolean {
+        const idx = tabs.value.findIndex(t => t.label === label)
+        if (idx === -1) return false
+        tabs.value.splice(idx, 1)
+        saveToStorage(tabs.value)
+        return true
+    }
+
+    function moveTab(fromLabel: string, toLabel: string) {
+        const from = tabs.value.findIndex(t => t.label === fromLabel)
+        const to = tabs.value.findIndex(t => t.label === toLabel)
+        if (from === -1 || to === -1) return
+        const [moved] = tabs.value.splice(from, 1)
+        tabs.value.splice(to, 0, moved)
+        saveToStorage(tabs.value)
+    }
+
     return {
         tabs,
         create,
         remove,
+        persist,
+        renameTab,
+        removeTab,
+        moveTab,
     }
 })

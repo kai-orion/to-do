@@ -42,7 +42,7 @@ function readPersisted(): PersistedTheme | undefined {
 }
 
 function extractHct(persisted: PersistedTheme | undefined): { hue: number, chroma: number, tone: number } {
-    const fallback = { hue: 10, chroma: 50, tone: 90 }
+    const fallback = { hue: 260, chroma: 50, tone: 90 }
     if (!persisted) return fallback
     const hct = persisted.hct as { hue?: number, chroma?: number, tone?: number } | undefined
     if (hct && (hct.hue !== undefined || hct.chroma !== undefined || hct.tone !== undefined)) {
