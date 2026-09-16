@@ -17,7 +17,7 @@ export const MaterialVariants = {
 
 const STORAGE_KEY = 'Symbol(__material-theme-configuration)'
 
-type PersistedTheme = {
+type IPersistedTheme = {
     contrastLevel?: TMaterialContrastLevel
     isDark?: boolean
     variant?: TMaterialVariant
@@ -25,14 +25,14 @@ type PersistedTheme = {
     chroma?: number
     tone?: number
     hct?: { hue?: number, chroma?: number, tone?: number } | Hct
-    configuration?: PersistedTheme
+    configuration?: IPersistedTheme
 }
 
-function readPersisted(): PersistedTheme | undefined {
+function readPersisted(): IPersistedTheme | undefined {
     try {
         const raw = localStorage.getItem(STORAGE_KEY)
         if (!raw) return undefined
-        const parsed = JSON.parse(raw ?? '{}') as PersistedTheme
+        const parsed = JSON.parse(raw ?? '{}') as IPersistedTheme
         // Old service saved `configuration` object directly, which may itself
         // contain the fields. Support both shapes.
         return parsed?.configuration ?? parsed
@@ -41,7 +41,7 @@ function readPersisted(): PersistedTheme | undefined {
     }
 }
 
-function extractHct(persisted: PersistedTheme | undefined): { hue: number, chroma: number, tone: number } {
+function extractHct(persisted: IPersistedTheme | undefined): { hue: number, chroma: number, tone: number } {
     const fallback = { hue: 260, chroma: 50, tone: 90 }
     if (!persisted) return fallback
     const hct = persisted.hct as { hue?: number, chroma?: number, tone?: number } | undefined
@@ -76,6 +76,7 @@ export const useMaterialThemeStore = defineStore('material-theme', () => {
 
     const cssText = computed(() => {
         const theme = createTheme({
+            oled: true,
             contrastLevel: contrastLevel.value,
             specVersion: '2025',
             variant: variant.value,
@@ -83,7 +84,7 @@ export const useMaterialThemeStore = defineStore('material-theme', () => {
         return toCSS({
             format: 'hex',
             includePalettes: false,
-            includeRoot: false,
+            includeRoot: true,
             includeTheme: true,
             wrapLightDark: true,
         })(theme)
@@ -102,37 +103,37 @@ export const useMaterialThemeStore = defineStore('material-theme', () => {
         }
     }
 
-    function setContrastLevel(value: TMaterialContrastLevel) {
+    function updateContrastLevel(value: TMaterialContrastLevel) {
         contrastLevel.value = value
         save()
     }
 
-    function setIsDark(value: boolean) {
+    function updateIsDark(value: boolean) {
         isDark.value = value
         save()
     }
 
-    function setVariant(value: TMaterialVariant) {
+    function updateVariant(value: TMaterialVariant) {
         variant.value = value
         save()
     }
 
-    function setHue(value: number) {
+    function updateHue(value: number) {
         hue.value = value
         save()
     }
 
-    function setChroma(value: number) {
+    function updateChroma(value: number) {
         chroma.value = value
         save()
     }
 
-    function setTone(value: number) {
+    function updateTone(value: number) {
         tone.value = value
         save()
     }
 
-    function setHct(value: Hct) {
+    function updateHct(value: Hct) {
         hue.value = value.hue
         chroma.value = value.chroma
         tone.value = value.tone
@@ -152,12 +153,12 @@ export const useMaterialThemeStore = defineStore('material-theme', () => {
         hct,
         hctToInt,
         cssText,
-        setContrastLevel,
-        setIsDark,
-        setVariant,
-        setHue,
-        setChroma,
-        setTone,
-        setHct,
+        updateContrastLevel,
+        updateIsDark,
+        updateVariant,
+        updateHue,
+        updateChroma,
+        updateTone,
+        updateHct,
     }
 })

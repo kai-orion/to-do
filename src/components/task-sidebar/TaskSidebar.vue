@@ -7,7 +7,7 @@
                 @click="emit('create-task')"
             >
                 <md-icon class="create-icon">add</md-icon>
-                <span class="create-label">Create</span>
+                <span class="create-label">New Task</span>
                 <md-ripple></md-ripple>
             </button>
         </div>
@@ -42,11 +42,13 @@
                 @click="emit('toggle-lists-collapsed')"
             >
                 <span class="lists-title">Lists</span>
-                <md-icon class="lists-arrow">{{ props.listsCollapsed ? 'keyboard_arrow_right' : 'keyboard_arrow_up' }}</md-icon>
+                <md-icon class="lists-arrow">
+                    {{ props.isListsCollapsed ? 'keyboard_arrow_right' : 'keyboard_arrow_up' }}
+                </md-icon>
             </button>
 
             <div
-                v-if="!props.listsCollapsed"
+                v-if="!props.isListsCollapsed"
                 class="lists-rows"
             >
                 <label
@@ -69,7 +71,7 @@
                     @click="emit('create-list')"
                 >
                     <md-icon class="new-list-icon">add</md-icon>
-                    <span class="new-list-label">Create new list</span>
+                    <span class="new-list-label">Create New List</span>
                     <md-ripple></md-ripple>
                 </button>
             </div>
@@ -78,14 +80,14 @@
 </template>
 
 <script setup lang="ts">
-import type { ITodoTab } from '../../stores/todo-tabs'
+import type { ITodoTab } from '../../stores/todo-tabs';
 
 const props = defineProps<{
     tabs: Array<ITodoTab>
     counts: Record<string, number>
     visible: Record<string, boolean>
     activeView: 'all' | 'starred'
-    listsCollapsed: boolean
+    isListsCollapsed: boolean
 }>()
 
 const emit = defineEmits<{
@@ -126,27 +128,19 @@ const emit = defineEmits<{
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
-    @apply bg-surface text-on-surface;
-    box-shadow:
-        0 1px 2px rgb(0 0 0 / 0.24),
-        0 1px 3px 1px rgb(0 0 0 / 0.12);
-}
+    user-select: none;
 
-.create-btn:hover {
-    box-shadow:
-        0 2px 6px 2px rgb(0 0 0 / 0.14),
-        0 1px 2px rgb(0 0 0 / 0.24);
-}
+    @apply bg-tertiary-container text-on-tertiary-container;
 
-.create-icon {
+    --md-ripple-hover-color: var(--md-sys-color-on-tertiary-container);
+    --md-ripple-pressed-color: var(--md-sys-color-on-tertiary-container);
     --md-icon-size: 24px;
+
+    & .create-label {
+        @apply label-medium;
+    }
 }
 
-.create-label {
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.1px;
-}
 
 .views {
     display: flex;
@@ -275,17 +269,20 @@ const emit = defineEmits<{
     border-radius: 999px;
     overflow: hidden;
     cursor: pointer;
-}
+    user-select: none;
 
-.new-list-row:hover {
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
-}
+    border: 1px solid var(--md-sys-color-outline);
 
-.new-list-icon {
-    --md-icon-size: 20px;
-}
+    &:hover {
+        background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+    }
 
-.new-list-label {
-    font-size: 14px;
+    & .new-list-icon {
+        --md-icon-size: 20px;
+    }
+
+    & .new-list-label {
+        font-size: 14px;
+    }
 }
 </style>

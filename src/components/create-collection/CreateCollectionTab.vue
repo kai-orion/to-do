@@ -65,7 +65,7 @@ onMounted(() => {
     createCollectionDialogRef.value?.addEventListener('close', () => {
         const form = createCollectionDialogRef.value?.querySelector('form')!
         if (createCollectionDialogRef.value?.returnValue === 'apply') {
-            todoTabs.create({
+            todoTabs.insertOneTab({
                 label: (form.querySelector('#create-collection-dialog-collection-name-text-field') as MdOutlinedTextField).value
             })
         }

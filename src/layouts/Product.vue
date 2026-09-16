@@ -4,14 +4,14 @@
         <template v-if="!$slots.header">
             <Header headline="Todo">
                 <template #start>
-                    <md-icon-button @click="() => setNavigationDrawerOpen(!navigationDrawerOpen)">
-                        <md-icon>{{ navigationDrawerOpen ? 'menu_open' : 'menu' }}</md-icon>
+                    <md-icon-button @click="() => navigation.updateOpen(!navigation.isOpen)">
+                        <md-icon>{{ navigation.isOpen ? 'menu_open' : 'menu' }}</md-icon>
                     </md-icon-button>
                 </template>
 
                 <template #end>
-                    <md-icon-button @click="() => setIsDark(!isDark)">
-                        <md-icon>{{ isDark ? 'light_mode' : 'dark_mode' }}</md-icon>
+                    <md-icon-button @click="() => theme.updateIsDark(!theme.isDark)">
+                        <md-icon>{{ theme.isDark ? 'light_mode' : 'dark_mode' }}</md-icon>
                     </md-icon-button>
                 </template>
             </Header>
@@ -23,7 +23,7 @@
 
         <main
             class="content-view"
-            :class="[navigationDrawerOpen && 'nav-open']"
+            :class="[navigation.isOpen && 'nav-open']"
         >
             <span class="content">
                 <slot></slot>
@@ -32,10 +32,10 @@
             <span class="navigation-drawer">
                 <template v-if="!$slots['navigation-drawer']">
                     <NavigationDrawer
-                        @scrim-click="() => setNavigationDrawerOpen(false)"
-                        :modal="modal"
+                        @scrim-click="() => navigation.updateOpen(false)"
+                        :is-modal="mediaQuery.currentBreakpoint === 'compact'"
                         :nav-links="navigation.navLinks"
-                        :open="navigationDrawerOpen"
+                        :is-open="navigation.isOpen"
                     ></NavigationDrawer>
                 </template>
                 <template v-else>
@@ -50,7 +50,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { Header } from '../components/header/header'
 import { NavigationDrawer } from '../components/navigation-drawer/navigation-drawer'
 import { useMaterialThemeStore } from '../stores/material-theme'
@@ -60,16 +59,6 @@ import { useNavigationStore } from '../stores/navigation'
 const theme = useMaterialThemeStore()
 const navigation = useNavigationStore()
 const mediaQuery = useMediaQueryStore()
-
-const modal = computed(() => mediaQuery.currentBreakpoint === 'compact')
-const isDark = computed(() => theme.isDark)
-const setIsDark = (isDark: boolean) => {
-    theme.setIsDark(isDark)
-}
-const navigationDrawerOpen = computed(() => navigation.open)
-const setNavigationDrawerOpen = (open: boolean) => {
-    navigation.setOpen(open)
-}
 </script>
 
 <style scoped>

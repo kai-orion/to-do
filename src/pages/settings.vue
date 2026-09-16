@@ -9,7 +9,7 @@
             <Accordion
                 headline="Theme"
                 description="Desc"
-                :default-open="false"
+                :is-default-open="false"
             >
                 <form
                     class="setting-form"
@@ -121,17 +121,17 @@ const themeFormChange = (e: Event) => {
     const name = (target as HTMLInputElement).getAttribute('name')
 
     if (name === 'is-dark') {
-        theme.setIsDark((target as MdSwitch).selected)
+        theme.updateIsDark((target as MdSwitch).selected)
     } else if (name === 'contrast-level') {
-        theme.setContrastLevel((target as MdSlider).value! as unknown as TMaterialContrastLevel)
+        theme.updateContrastLevel((target as MdSlider).value! as unknown as TMaterialContrastLevel)
     } else if (name === 'variant') {
-        theme.setVariant(Number((target as MdOutlinedSelect).value) as TMaterialVariant)
+        theme.updateVariant(Number((target as MdOutlinedSelect).value) as TMaterialVariant)
     } else if (name === 'hue') {
-        theme.setHue((target as MdSlider).value!)
+        theme.updateHue((target as MdSlider).value!)
     } else if (name === 'chroma') {
-        theme.setChroma((target as MdSlider).value!)
+        theme.updateChroma((target as MdSlider).value!)
     } else if (name === 'tone') {
-        theme.setTone((target as MdSlider).value!)
+        theme.updateTone((target as MdSlider).value!)
     }
 }
 

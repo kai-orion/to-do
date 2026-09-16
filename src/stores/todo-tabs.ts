@@ -36,13 +36,8 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
         saveToStorage(tabs.value)
     }
 
-    function create(tab: ITodoTab) {
+    function insertOneTab(tab: ITodoTab) {
         tabs.value.push(tab)
-        saveToStorage(tabs.value)
-    }
-
-    function remove(tab: ITodoTab) {
-        tabs.value.splice(tabs.value.findIndex(e => e.label === tab.label), 1)
         saveToStorage(tabs.value)
     }
 
@@ -50,7 +45,7 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
         saveToStorage(tabs.value)
     }
 
-    function renameTab(oldName: string, next: string): boolean {
+    function updateOneTab(oldName: string, next: string): boolean {
         if (tabs.value.some(t => t.label === next)) return false
         const tab = tabs.value.find(t => t.label === oldName)
         if (!tab) return false
@@ -59,7 +54,7 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
         return true
     }
 
-    function removeTab(label: string): boolean {
+    function removeOneTabByLabel(label: string): boolean {
         const idx = tabs.value.findIndex(t => t.label === label)
         if (idx === -1) return false
         tabs.value.splice(idx, 1)
@@ -67,7 +62,7 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
         return true
     }
 
-    function moveTab(fromLabel: string, toLabel: string) {
+    function updateOneTabPosition(fromLabel: string, toLabel: string) {
         const from = tabs.value.findIndex(t => t.label === fromLabel)
         const to = tabs.value.findIndex(t => t.label === toLabel)
         if (from === -1 || to === -1) return
@@ -78,11 +73,10 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
 
     return {
         tabs,
-        create,
-        remove,
+        insertOneTab,
         persist,
-        renameTab,
-        removeTab,
-        moveTab,
+        updateOneTab,
+        removeOneTabByLabel,
+        updateOneTabPosition,
     }
 })

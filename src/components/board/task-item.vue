@@ -5,7 +5,7 @@
                 :title="editTitle"
                 :description="editDesc"
                 :due="editDue"
-                :show-drag-hint="true"
+                :has-drag-hint="true"
                 autofocus="select"
                 @update:title="emit('update:edit-title', $event)"
                 @update:description="emit('update:edit-desc', $event)"
@@ -67,7 +67,7 @@
         </span>
 
         <div
-            v-if="taskMenuOpen"
+            v-if="isTaskMenuOpen"
             class="pop-menu task-menu"
             @click.stop
         >
@@ -134,7 +134,7 @@
             :title="subTitle"
             :description="subDesc"
             :due="subDue"
-            :check-small="true"
+            :is-check-small="true"
             :is-sub="true"
             autofocus="focus"
             @update:title="emit('update:sub-title', $event)"
@@ -157,7 +157,7 @@
             <TaskComposer
                 :title="editTitle"
                 :description="editDesc"
-                :check-small="true"
+                :is-check-small="true"
                 :is-sub="true"
                 autofocus="select"
                 @update:title="emit('update:edit-title', $event)"
@@ -273,7 +273,7 @@ defineProps<{
     todo: ITodo
     steps: Array<{ headline: string, isCompleted: boolean }>
     tabs: Array<ITodoTab>
-    taskMenuOpen: boolean
+    isTaskMenuOpen: boolean
     openStepMenuIndex: number | null
     dropPos: 'before' | 'after' | null
     isEditingTask: boolean

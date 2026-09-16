@@ -1,5 +1,8 @@
 <template>
-    <header class="tasks-header">
+    <header
+        class="tasks-header"
+        :class="{ 'border-bottom': props.borderBottom }"
+    >
         <md-icon-button
             class="menu-btn"
             @click="emit('menu-click')"
@@ -14,22 +17,18 @@
             <span class="brand-name">Tasks</span>
         </div>
         <span class="header-spacer"></span>
-        <md-icon-button aria-label="Help">
-            <md-icon>help_outline</md-icon>
-        </md-icon-button>
-        <md-icon-button aria-label="Apps">
-            <md-icon>apps</md-icon>
-        </md-icon-button>
-        <span
-            class="avatar"
-            title="Account"
-        >K</span>
+        <slot name="end"></slot>
     </header>
 </template>
 
 <script setup lang="ts">
-// Pure component: no Pinia, no router, no external inject/provide.
-// Data in via props (none needed), actions out via emits.
+
+const props = withDefaults(defineProps<{
+    borderBottom?: boolean
+}>(), {
+    borderBottom: false
+})
+
 const emit = defineEmits<{
     (e: 'menu-click'): void
 }>()
@@ -46,6 +45,17 @@ const emit = defineEmits<{
     width: 100%;
     padding: 8px 16px 8px 8px;
     @apply bg-surface-container text-on-surface;
+
+    transition-duration: 200ms;
+    transition-behavior: allow-discrete;
+    transition-property: border-bottom-color;
+    border-bottom-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+
+    &.border-bottom {
+        border-bottom-color: var(--md-sys-color-outline-variant);
+    }
 }
 
 .menu-btn {
@@ -67,7 +77,7 @@ const emit = defineEmits<{
     width: 32px;
     height: 32px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #0b57d0 0%, #4b90ff 100%);
+    background: linear-gradient(135deg, #0b57d0 0%, #b6d2ff 100%);
 }
 
 .brand-check {
@@ -85,23 +95,5 @@ const emit = defineEmits<{
 
 .header-spacer {
     flex: 1 1 auto;
-}
-
-.avatar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    margin-left: 4px;
-    border-radius: 999px;
-    font-size: 16px;
-    font-weight: 500;
-    color: #fff;
-    background: #5f6368;
-    outline: 2px solid #0b57d0;
-    outline-offset: 2px;
-    cursor: pointer;
-    user-select: none;
 }
 </style>

@@ -11,7 +11,7 @@
     >
         <div
             class="card-head"
-            :draggable="draggableCard ? true : undefined"
+            :draggable="isDraggableCard ? true : undefined"
             @dragstart="emit('card-dragstart', $event)"
             @dragend="emit('card-dragend')"
         >
@@ -25,7 +25,7 @@
             </md-icon-button>
 
             <div
-                v-if="listMenuOpen"
+                v-if="isListMenuOpen"
                 class="pop-menu list-menu"
                 @click.stop
             >
@@ -118,9 +118,9 @@
         <TaskComposer
             v-if="isRenaming"
             :title="renameDraft"
-            :show-check="false"
+            :has-check="false"
             title-placeholder="List name"
-            :show-rename-actions="true"
+            :has-rename-actions="true"
             autofocus="focus"
             @update:title="emit('update:rename-draft', $event)"
             @confirm="emit('confirm-rename')"
@@ -137,11 +137,11 @@
             class="completed-toggle"
             @click="emit('toggle-completed')"
         >
-            <md-icon class="completed-arrow">{{ completedExpanded ? 'arrow_drop_down' : 'arrow_right' }}</md-icon>
+            <md-icon class="completed-arrow">{{ isCompletedExpanded ? 'arrow_drop_down' : 'arrow_right' }}</md-icon>
             <span>Completed ({{ completedCount }})</span>
         </button>
         <ul
-            v-if="completedExpanded"
+            v-if="isCompletedExpanded"
             class="tasks completed-list"
         >
             <li
@@ -190,7 +190,7 @@ defineProps<{
     sortMode: SortMode
     sortOptions: Array<{ value: SortMode, label: string }>
     isDefaultList: boolean
-    listMenuOpen: boolean
+    isListMenuOpen: boolean
     isAdding: boolean
     draftTitle: string
     draftDesc: string
@@ -198,11 +198,11 @@ defineProps<{
     isRenaming: boolean
     renameDraft: string
     completedCount: number
-    completedExpanded: boolean
+    isCompletedExpanded: boolean
     completedTodos: Array<ITodo>
     isCardDropTarget: boolean
     isTaskDropTarget: boolean
-    draggableCard: boolean
+    isDraggableCard: boolean
 }>()
 
 const emit = defineEmits<{

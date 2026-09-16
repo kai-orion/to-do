@@ -4,6 +4,11 @@ import { useTodoTabsStore } from '../stores/todo-tabs'
 
 export type DropPos = 'before' | 'after'
 
+export interface IUseBoardDragArgs {
+    isBusy: () => boolean
+    ensureVisible: (label: string) => void
+}
+
 function dragChip(label: string): HTMLElement {
     const el = document.createElement('div')
     el.textContent = label
@@ -18,7 +23,7 @@ function dragChip(label: string): HTMLElement {
  * (composer-busy guard, ensureVisible) arrive as params — hooks never import
  * each other, the page composes them.
  */
-export function useBoardDrag(opts: { isBusy: () => boolean, ensureVisible: (label: string) => void }) {
+export function useBoardDrag(args: IUseBoardDragArgs) {
     const todoList = useTodoListStore()
     const todoTabs = useTodoTabsStore()
 
@@ -30,7 +35,7 @@ export function useBoardDrag(opts: { isBusy: () => boolean, ensureVisible: (labe
 
     // ---- drag & drop: tasks ----
     function onTaskDragStart(e: DragEvent, todo: ITodo) {
-        if (opts.isBusy()) {
+        if (args.isBusy()) {
             e.preventDefault()
             return
         }
@@ -70,12 +75,12 @@ export function useBoardDrag(opts: { isBusy: () => boolean, ensureVisible: (labe
         dropIndicator.value = null
         draggingTaskUuid.value = null
         if (!uuid || uuid === target.data.uuid) return
-        const dragged = todoList.findByUuid(uuid)
+        const dragged = todoList.findOneTodoByUuid(uuid)
         if (!dragged) return
         dragged.data.collectionName = target.data.collectionName
         const delta = indicator?.pos === 'before' ? -0.5 : 0.5
-        todoList.retimeTask(dragged, target.data.creationTimestamp + delta)
-        opts.ensureVisible(target.data.collectionName)
+        todoList.updateOneTodoTimestamp(dragged, target.data.creationTimestamp + delta)
+        args.ensureVisible(target.data.collectionName)
     }
 
     // ---- drag & drop: cards (lists) ----
@@ -108,7 +113,7 @@ export function useBoardDrag(opts: { isBusy: () => boolean, ensureVisible: (labe
         if (draggingCard.value && draggingCard.value !== listName) {
             e.preventDefault()
             e.stopPropagation()
-            todoTabs.moveTab(draggingCard.value, listName)
+            todoTabs.updateOneTabPosition(draggingCard.value, listName)
             draggingCard.value = null
             dragCardOver.value = null
             return
@@ -116,14 +121,14 @@ export function useBoardDrag(opts: { isBusy: () => boolean, ensureVisible: (labe
         if (draggingTaskUuid.value) {
             e.preventDefault()
             e.stopPropagation()
-            const dragged = todoList.findByUuid(draggingTaskUuid.value)
+            const dragged = todoList.findOneTodoByUuid(draggingTaskUuid.value)
             draggingTaskUuid.value = null
             dragTaskOverList.value = null
             dropIndicator.value = null
             if (!dragged) return
-            todoList.moveTaskTo(dragged, listName)
-            todoList.retimeTask(dragged, Date.now())
-            opts.ensureVisible(listName)
+            todoList.updateOneTodoCollection(dragged, listName)
+            todoList.updateOneTodoTimestamp(dragged, Date.now())
+            args.ensureVisible(listName)
         }
     }
 

@@ -41,8 +41,15 @@ No test, lint, or format scripts exist. `fake-indexeddb` is a dep reserved for f
 - Scattered page logic goes into composables, not more components. Max ~5 cohesive hooks per page (current board: `useBoardView`, `useComposers`, `useBoardDialogs`, `useBoardDrag`, `useMasonry`).
 - Two kinds, same rule as components: pure hooks (no `use*Store`, e.g. `useComposers`, `useMasonry` with breakpoint passed as param) are usable anywhere; store-touching hooks (e.g. `useBoardView`, `useBoardDialogs`, `useBoardDrag`) are business logic — only call them from a page / `*Layout.vue`, never from a pure `{name}.vue`.
 - Hooks never import each other. Cross-cutting needs (e.g. `closePop`, `ensureVisible`, busy guard) arrive as explicit params — the page composes them.
-- Data-mutating operations belong in the Pinia store as methods (`findByUuid`, `stepsOf`/`saveSteps`, `createTask`/`updateTask`, step ops, `moveTaskTo`, `renameCollection`, `removeInList`, …); hooks and pages only dispatch. Keep cross-store imports out of stores.
+- Data-mutating operations belong in the Pinia store as methods (`findOneTodoByUuid`, `findManyStepsByParent`/`updateManyStepsByParent`, `insertOneTodoFromFields`/`updateOneTodo`, step ops, `updateOneTodoCollection`, `updateOneTab`, `removeManyTodosByList`, …); hooks and pages only dispatch. Keep cross-store imports out of stores.
 - Each hook returns an explicit object and stays independently runnable/testable; the page keeps identical `props`/`emits` names toward children so templates don't churn.
+
+## Naming
+
+- 接口一律 `I` 開頭 (e.g. `ITodo`, `IUser`).
+- Composable / 構造器的參數類型命名為 `I{Name}Args`,且一定是 `interface`;調用時參數名一律 `args`,即 `funcName(args: IXxxArgs)` (e.g. `IUserSendOneMessageUseCaseArgs`).
+- 數據操作動詞只用 `find` / `insert` / `remove` / `update`.個數與範圍用 `One` / `Many`;條件用 `By` (e.g. `findOneUserById`).`update` 通常已隱含按身份定位,不加 `By` (e.g. `updateOneUser`).查全部用無參的 `findMany()`.
+- Boolean 類型的數據 / 屬性優先 `is` / `has` / `exists` 開頭 (e.g. `isVisible`, `isSupported`).
 
 ## Verification — Playwright MCP first
 

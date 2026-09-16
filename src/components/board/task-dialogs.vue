@@ -24,7 +24,7 @@
                 <md-text-button
                     form="create-list-dialog-form"
                     value="commit"
-                    :disabled="createListDoneDisabled"
+                    :disabled="isCreateListDoneDisabled"
                 >Done</md-text-button>
             </div>
         </md-dialog>
@@ -84,8 +84,8 @@
                 </div>
                 <label class="ct-check-row">
                     <md-checkbox
-                        :checked="ctAllDay"
-                        @click.prevent="emit('update:ct-all-day', !ctAllDay)"
+                        :checked="isAllDay"
+                        @click.prevent="emit('update:is-all-day', !isAllDay)"
                     ></md-checkbox>
                     <span>All day</span>
                 </label>
@@ -131,7 +131,7 @@
             </form>
             <div slot="actions">
                 <md-filled-tonal-button
-                    :disabled="ctSaveDisabled"
+                    :disabled="isSaveDisabled"
                     @click="emit('confirm-create-task')"
                 >Save</md-filled-tonal-button>
             </div>
@@ -149,13 +149,13 @@ import type { ITodoTab } from '../../stores/todo-tabs'
 // which owns all stores — drives the dialogs.
 const props = defineProps<{
     tabs: Array<ITodoTab>
-    createListDoneDisabled: boolean
+    isCreateListDoneDisabled: boolean
     ctDateLabel: string
     ctTime: string
-    ctAllDay: boolean
+    isAllDay: boolean
     ctRepeat: string
     ctList: string
-    ctSaveDisabled: boolean
+    isSaveDisabled: boolean
 }>()
 
 const emit = defineEmits<{
@@ -164,7 +164,7 @@ const emit = defineEmits<{
     (e: 'create-list-close', returnValue: string, name: string): void
     (e: 'update:ct-date', v: string): void
     (e: 'update:ct-time', v: string): void
-    (e: 'update:ct-all-day', v: boolean): void
+    (e: 'update:is-all-day', v: boolean): void
     (e: 'update:ct-repeat', v: string): void
     (e: 'update:ct-list', v: string): void
     (e: 'close-create-task'): void
@@ -194,13 +194,13 @@ function closeCreateTask(value = 'cancel') {
     createTaskDialogRef.value?.close(value)
 }
 
-function readField(name: string): string {
+function findOneFieldValueByName(name: string): string {
     const scope = name === 'task-title' || name === 'task-desc' ? createTaskDialogRef.value : createListDialogRef.value
     const el = scope?.querySelector(`[name="${name}"]`) as unknown as { value?: string } | null
     return el?.value ?? ''
 }
 
-defineExpose({ showCreateList, showCreateTask, closeCreateTask, readField })
+defineExpose({ showCreateList, showCreateTask, closeCreateTask, findOneFieldValueByName })
 
 onMounted(() => {
     createListDialogRef.value?.querySelector('[name="list-name"]')?.addEventListener('input', (e: Event) => {
@@ -210,7 +210,7 @@ onMounted(() => {
         emit('task-title-input', ((e.target as unknown as { value?: string }).value ?? ''))
     })
     createListDialogRef.value?.addEventListener('close', () => {
-        emit('create-list-close', createListDialogRef.value?.returnValue ?? '', readField('list-name').trim())
+        emit('create-list-close', createListDialogRef.value?.returnValue ?? '', findOneFieldValueByName('list-name').trim())
     })
     void props
 })

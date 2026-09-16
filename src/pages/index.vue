@@ -1,35 +1,52 @@
 <template>
     <Product>
         <template #header>
-            <TasksHeader @menu-click="() => navigation.setOpen(!navigation.open)" />
+            <TasksHeader
+                :border-bottom="!intersection.isVisible.value"
+                @menu-click="() => navigation.updateOpen(!navigation.isOpen)"
+            >
+                <template #end>
+                    <md-icon-button @click="() => handleLightDarkIconButtonSwitch((isDark) => !isDark)">
+                        <md-icon v-if="isLightModeIconShown">light_mode</md-icon>
+                        <md-icon v-else>dark_mode</md-icon>
+                    </md-icon-button>
+                </template>
+            </TasksHeader>
         </template>
 
         <template #navigation-drawer>
             <div
                 class="tasks-drawer"
-                :class="[modal && 'is-modal', navigation.open && 'is-open']"
+                :class="{ 'border-right': isNavigationDrawerBorderRightEnabled, 'is-modal': isModal, 'is-open': navigation.isOpen }"
             >
                 <TaskSidebar
                     :tabs="tabs"
                     :counts="activeCounts"
                     :visible="visibleLists"
                     :active-view="activeView"
-                    :lists-collapsed="listsCollapsed"
+                    :is-lists-collapsed="isListsCollapsed"
                     @select-all="activeView = 'all'"
                     @select-starred="activeView = 'starred'"
                     @toggle-list="toggleListVisible"
-                    @toggle-lists-collapsed="listsCollapsed = !listsCollapsed"
+                    @toggle-lists-collapsed="isListsCollapsed = !isListsCollapsed"
                     @create-list="() => openCreateList()"
                     @create-task="() => openCreateDialog()"
                 />
             </div>
             <span
-                v-if="modal"
+                v-if="isModal"
                 class="tasks-scrim"
-                :class="[navigation.open && 'is-open']"
-                @click="() => navigation.setOpen(false)"
+                :class="[navigation.isOpen && 'is-open']"
+                @click="() => navigation.updateOpen(false)"
             ></span>
         </template>
+
+        <span
+            aria-hidden="true"
+            class="anchor-top"
+            aria-label="用於控制header border-bottom 屬性的錨點元素"
+            ref="anchor-top"
+        ></span>
 
         <div class="board-scroll">
             <div
@@ -43,7 +60,7 @@
                     :sort-mode="sortMode[listName] ?? 'my-order'"
                     :sort-options="sortOptions"
                     :is-default-list="isDefaultList(listName)"
-                    :list-menu-open="openPop?.type === 'list' && openPop.name === listName"
+                    :is-list-menu-open="openPop?.type === 'list' && openPop.name === listName"
                     :is-adding="addingTo === listName"
                     :draft-title="draftTitle"
                     :draft-desc="draftDesc"
@@ -51,11 +68,11 @@
                     :is-renaming="renaming === listName"
                     :rename-draft="renameDraft"
                     :completed-count="completedCounts[listName] ?? 0"
-                    :completed-expanded="!!expandedCompleted[listName]"
+                    :is-completed-expanded="!!expandedCompleted[listName]"
                     :completed-todos="completedByList[listName] ?? []"
                     :is-card-drop-target="dragCardOver === listName"
                     :is-task-drop-target="dragTaskOverList === listName"
-                    :draggable-card="!draggingCard"
+                    :is-draggable-card="!draggingCard"
                     @card-dragstart="(e) => onCardDragStart(e, listName)"
                     @card-dragend="onCardDragEnd"
                     @card-dragover="(e) => onCardDragOver(e, listName)"
@@ -77,8 +94,8 @@
                     @confirm-add="() => confirmAdd(listName)"
                     @cancel-composer="cancelComposer"
                     @toggle-completed="() => toggleCompleted(listName)"
-                    @uncomplete-task="(uuid) => { const t = todoList.findByUuid(uuid); if (t) todoList.completeField(t, false) }"
-                    @delete-completed-task="(uuid) => { const t = todoList.findByUuid(uuid); if (t) todoList.remove(t) }"
+                    @uncomplete-task="(uuid) => { const t = todoList.findOneTodoByUuid(uuid); if (t) todoList.updateOneTodoCompletion(t, false) }"
+                    @delete-completed-task="(uuid) => { const t = todoList.findOneTodoByUuid(uuid); if (t) todoList.removeOneTodo(t) }"
                 >
                     <template
                         v-for="todo in orderedActive(listName)"
@@ -86,9 +103,9 @@
                     >
                         <TaskItem
                             :todo="todo"
-                            :steps="todoList.stepsOf(todo).filter(s => !s.isCompleted)"
+                            :steps="todoList.findManyStepsByParent(todo).filter(s => !s.isCompleted)"
                             :tabs="tabs"
-                            :task-menu-open="openPop?.type === 'task' && openPop.uuid === todo.data.uuid"
+                            :is-task-menu-open="openPop?.type === 'task' && openPop.uuid === todo.data.uuid"
                             :open-step-menu-index="openPop?.type === 'step' && openPop.parentUuid === todo.data.uuid ? openPop.index : null"
                             :drop-pos="dropIndicator?.uuid === todo.data.uuid ? dropIndicator.pos : null"
                             :is-editing-task="editing?.kind === 'task' && editing.uuid === todo.data.uuid"
@@ -100,8 +117,8 @@
                             :sub-desc="subDraftDesc"
                             :sub-due="subDraftDue"
                             :editing-step-index="editing?.kind === 'step' && editing.parentUuid === todo.data.uuid ? editing.index : null"
-                            @complete="() => todoList.completeField(todo, !todo.isCompleted)"
-                            @star="() => todoList.pinField(todo, !todo.isPinned)"
+                            @complete="() => todoList.updateOneTodoCompletion(todo, !todo.isCompleted)"
+                            @star="() => todoList.updateOneTodoPinned(todo, !todo.isPinned)"
                             @menu="() => toggleTaskMenu(todo.data.uuid)"
                             @menu-edit="() => { startEdit(todo); closePop() }"
                             @start-edit="() => startEdit(todo)"
@@ -125,7 +142,7 @@
                             @step-new-list="(idx) => newListForMove({ kind: 'step', parentUuid: todo.data.uuid, index: idx })"
                             @move-task="(list) => moveTaskTo(todo, list)"
                             @new-list="() => newListForMove({ kind: 'task', uuid: todo.data.uuid })"
-                            @delete-task="() => { todoList.remove(todo); closePop() }"
+                            @delete-task="() => { todoList.removeOneTodo(todo); closePop() }"
                             @attach="() => triggerAttach(todo.data.uuid)"
                             @dragstart="(e) => onTaskDragStart(e, todo)"
                             @dragend="onTaskDragEnd"
@@ -156,19 +173,19 @@
         <TaskDialogs
             ref="dialogsRef"
             :tabs="tabs"
-            :create-list-done-disabled="createListDoneDisabled"
+            :is-create-list-done-disabled="isCreateListDoneDisabled"
             :ct-date-label="ctDateLabel"
             :ct-time="ctTime"
-            :ct-all-day="ctAllDay"
+            :is-all-day="isAllDay"
             :ct-repeat="ctRepeat"
             :ct-list="ctList"
-            :ct-save-disabled="!ctTitle.trim()"
-            @list-name-input="(v) => { createListDoneDisabled = v.trim().length === 0 }"
+            :is-save-disabled="!ctTitle.trim()"
+            @list-name-input="(v) => { isCreateListDoneDisabled = v.trim().length === 0 }"
             @task-title-input="(v) => { ctTitle = v }"
             @create-list-close="(ret, name) => handleCreateListClose(ret, name)"
             @update:ct-date="(v) => { ctDate = v }"
             @update:ct-time="(v) => { ctTime = v }"
-            @update:ct-all-day="(v) => { ctAllDay = v }"
+            @update:is-all-day="(v) => { isAllDay = v }"
             @update:ct-repeat="(v) => { ctRepeat = v }"
             @update:ct-list="(v) => { ctList = v }"
             @close-create-task="closeCreateDialog"
@@ -178,36 +195,62 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import TaskSidebar from '../components/task-sidebar/TaskSidebar.vue'
-import TasksHeader from '../components/board/tasks-header.vue'
+import { computed, onMounted, ref, useTemplateRef } from 'vue'
+import TaskDialogs from '../components/board/task-dialogs.vue'
 import TaskItem from '../components/board/task-item.vue'
 import TaskListCard from '../components/board/task-list-card.vue'
-import TaskDialogs from '../components/board/task-dialogs.vue'
-import Product from '../layouts/Product.vue'
-import { useBoardDialogs, type DialogApi } from '../composables/useBoardDialogs'
+import TasksHeader from '../components/board/tasks-header.vue'
+import TaskSidebar from '../components/task-sidebar/TaskSidebar.vue'
+import { useBoardDialogs, type IDialogApi } from '../composables/useBoardDialogs'
 import { useBoardDrag } from '../composables/useBoardDrag'
 import { useBoardView } from '../composables/useBoardView'
 import { useComposers } from '../composables/useComposers'
+import { useIntersectionAnchor } from '../composables/useIntersectionAnchor.js'
 import { useMasonry } from '../composables/useMasonry'
-import { useTodoListStore, type ITodo } from '../stores/todo-list'
-import { useTodoTabsStore } from '../stores/todo-tabs'
+import Product from '../layouts/Product.vue'
+import { useMaterialThemeStore } from '../stores/material-theme.js'
 import { useMediaQueryStore } from '../stores/media-query'
 import { useNavigationStore } from '../stores/navigation'
+import { useTodoListStore, type ITodo } from '../stores/todo-list'
+import { useTodoTabsStore } from '../stores/todo-tabs'
 
 const todoList = useTodoListStore()
 const todoTabs = useTodoTabsStore()
 const mediaQuery = useMediaQueryStore()
 const navigation = useNavigationStore()
 
-const modal = computed(() => mediaQuery.currentBreakpoint === 'compact')
+/**
+ * 監聽 anchor-top 以控制 header 組件的 border-bottom 屬性
+ */
+const ancorTopElementRef = useTemplateRef<HTMLElement>('anchor-top')
+const intersection = useIntersectionAnchor(ancorTopElementRef)
+onMounted(() => {
+    intersection.start()
+})
+
+/**
+ * isDark
+ * 1. 用於控制 navigation-drawer 的 border-right 的顯示
+ * 2. 用於控制 header 組件的 light dark 圖標切換
+ * 3. 用於處理 light dark 主題切換
+ */
+const theme = useMaterialThemeStore()
+const isNavigationDrawerBorderRightEnabled = computed(() => theme.isDark)
+const isLightModeIconShown = computed(() => theme.isDark)
+
+const handleLightDarkIconButtonSwitch = (isDarkValueOrToggle: boolean | ((isDark: boolean) => boolean)) => {
+    if (typeof isDarkValueOrToggle === 'boolean') theme.updateIsDark(isDarkValueOrToggle)
+    else theme.updateIsDark(isDarkValueOrToggle(theme.isDark))
+}
+
+const isModal = computed(() => mediaQuery.currentBreakpoint === 'compact')
 
 // ---- board view-model: view/filter/sort/menu state + derived lists (reads stores) ----
 const {
     tabs,
     sortOptions,
     activeView,
-    listsCollapsed,
+    isListsCollapsed,
     visibleLists,
     expandedCompleted,
     sortMode,
@@ -252,13 +295,13 @@ const {
 })
 
 // ---- create dialogs: elements live in pure TaskDialogs; data + logic from hook ----
-const dialogsRef = ref<DialogApi | null>(null)
+const dialogsRef = ref<IDialogApi | null>(null)
 const {
-    createListDoneDisabled,
+    isCreateListDoneDisabled,
     ctTitle,
     ctDate,
     ctTime,
-    ctAllDay,
+    isAllDay,
     ctRepeat,
     ctList,
     ctDateLabel,
@@ -276,7 +319,7 @@ const {
 })
 
 function openCreateDialog() {
-    if (modal.value) navigation.setOpen(false)
+    if (isModal.value) navigation.updateOpen(false)
     openCreateTaskDialog()
 }
 
@@ -305,7 +348,7 @@ const {
 } = useComposers({ closePop })
 
 function startStepEdit(todo: ITodo, index: number) {
-    startStepComposer(todo.data.uuid, index, todoList.stepsOf(todo)[index]?.headline)
+    startStepComposer(todo.data.uuid, index, todoList.findManyStepsByParent(todo)[index]?.headline)
 }
 
 function confirmAdd(listName: string) {
@@ -314,7 +357,7 @@ function confirmAdd(listName: string) {
         cancelComposer()
         return
     }
-    todoList.createTask({
+    todoList.insertOneTodoFromFields({
         headline: title,
         description: draftDesc.value.trim(),
         collectionName: listName,
@@ -332,12 +375,12 @@ function confirmEdit() {
     if (!st) return
     const title = editTitle.value.trim()
     if (st.kind === 'task') {
-        const todo = todoList.findByUuid(st.uuid)
+        const todo = todoList.findOneTodoByUuid(st.uuid)
         if (todo) {
             if (!title) {
-                todoList.remove(todo)
+                todoList.removeOneTodo(todo)
             } else {
-                todoList.updateTask(todo, {
+                todoList.updateOneTodo(todo, {
                     headline: title,
                     description: editDesc.value.trim(),
                     dueLabel: editDue.value || undefined,
@@ -345,12 +388,12 @@ function confirmEdit() {
             }
         }
     } else {
-        const parent = todoList.findByUuid(st.parentUuid)
+        const parent = todoList.findOneTodoByUuid(st.parentUuid)
         if (parent) {
             if (!title) {
-                todoList.removeStep(parent, st.index)
+                todoList.removeOneStepByParent(parent, st.index)
             } else {
-                todoList.updateStep(parent, st.index, title)
+                todoList.updateOneStepByParent(parent, st.index, title)
             }
         }
     }
@@ -364,35 +407,35 @@ function confirmSubAdd(parent: ITodo) {
         cancelComposer()
         return
     }
-    todoList.addStep(parent, title, subDraftDue.value || undefined)
+    todoList.insertOneStepByParent(parent, title, subDraftDue.value || undefined)
     subDraftTitle.value = ''
     subDraftDesc.value = ''
     subDraftDue.value = ''
 }
 
 function completeStep(parent: ITodo, index: number, value: boolean) {
-    todoList.setStepCompleted(parent, index, value)
+    todoList.updateOneStepCompletionByParent(parent, index, value)
 }
 
 function deleteStep(parent: ITodo, index: number) {
-    todoList.removeStep(parent, index)
+    todoList.removeOneStepByParent(parent, index)
     closePop()
 }
 
 function unindentStep(parent: ITodo, index: number) {
-    todoList.promoteStep(parent, index)
+    todoList.insertOneTodoFromStep(parent, index)
     closePop()
 }
 
 function moveStepTo(parent: ITodo, index: number, listName: string) {
-    todoList.moveStepToList(parent, index, listName)
+    todoList.insertOneTodoFromStep(parent, index, listName)
     ensureVisible(listName)
     closePop()
 }
 
 // ---- task move / attach ----
 function moveTaskTo(todo: ITodo, listName: string) {
-    todoList.moveTaskTo(todo, listName)
+    todoList.updateOneTodoCollection(todo, listName)
     ensureVisible(listName)
     closePop()
 }
@@ -410,9 +453,9 @@ function onAttachPicked(e: Event) {
     pendingAttachUuid.value = null
     input.value = ''
     if (!file || !uuid) return
-    const todo = todoList.findByUuid(uuid)
+    const todo = todoList.findOneTodoByUuid(uuid)
     if (!todo) return
-    todoList.addAttachment(todo, file.name)
+    todoList.updateOneTodoAttachment(todo, file.name)
 }
 
 // ---- list rename / delete / cleanup ----
@@ -422,11 +465,11 @@ function confirmRename(oldName: string) {
         cancelComposer()
         return
     }
-    if (!todoTabs.renameTab(oldName, next)) {
+    if (!todoTabs.updateOneTab(oldName, next)) {
         cancelComposer()
         return
     }
-    todoList.renameCollection(oldName, next)
+    todoList.updateManyTodosCollection(oldName, next)
     if (visibleLists[oldName] !== undefined) {
         visibleLists[next] = visibleLists[oldName]!
         delete visibleLists[oldName]
@@ -441,20 +484,20 @@ function confirmRename(oldName: string) {
 function deleteList(listName: string) {
     closePop()
     if (isDefaultList(listName)) return
-    if (todoTabs.removeTab(listName)) {
-        todoList.removeInList(listName)
+    if (todoTabs.removeOneTabByLabel(listName)) {
+        todoList.removeManyTodosByList(listName)
         delete visibleLists[listName]
     }
 }
 
 function deleteAllCompleted(listName: string) {
     closePop()
-    todoList.removeCompletedIn(listName)
+    todoList.removeManyCompletedTodosByList(listName)
 }
 
 function cleanOldTasks(listName: string) {
     closePop()
-    todoList.removeOldCompleted(listName, Date.now() - 30 * 86400000)
+    todoList.removeManyOldCompletedTodosByList(listName, Date.now() - 30 * 86400000)
 }
 
 function printList() {
@@ -475,8 +518,8 @@ const { boardRef } = useMasonry({
 })
 
 onMounted(() => {
-    if (modal.value) navigation.setOpen(false)
-    else navigation.setOpen(true)
+    if (isModal.value) navigation.updateOpen(false)
+    else navigation.updateOpen(true)
 })
 </script>
 
@@ -484,10 +527,26 @@ onMounted(() => {
 @reference "../styles/tailwind.css";
 
 .tasks-drawer {
-    width: 280px;
+    width: 260px;
     height: 100%;
     overflow: auto;
     transition: width 200ms ease, opacity 200ms ease;
+
+    transition-duration: 200ms;
+    transition-behavior: allow-discrete;
+    transition-property: border-right-color;
+    border-right-color: transparent;
+    border-right-style: solid;
+    border-right-width: 1px;
+
+    &.border-right {
+        border-right-color: var(--md-sys-color-outline-variant);
+    }
+}
+
+:root[compact] .tasks-drawer {
+    width: min(90dvw, 320px);
+    @apply rounded-r-extra-large;
 }
 
 .tasks-drawer:not(.is-modal):not(.is-open) {
@@ -505,7 +564,6 @@ onMounted(() => {
     z-index: 30;
     transition: transform 200ms ease;
     transform: translateX(-100%);
-    box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
 }
 
 .tasks-drawer.is-modal.is-open {
@@ -584,5 +642,4 @@ html:is([expanded], [large], [extra-large]) .board-scroll {
     z-index: 40;
     background: transparent;
 }
-
 </style>

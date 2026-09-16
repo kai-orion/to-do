@@ -3,7 +3,7 @@ import type { SortMode } from '../components/board/task-list-card.vue'
 import { useTodoListStore, type ITodo } from '../stores/todo-list'
 import { useTodoTabsStore } from '../stores/todo-tabs'
 
-export type PopState =
+export type IPopState =
     | { type: 'list', name: string }
     | { type: 'task', uuid: string }
     | { type: 'step', parentUuid: string, index: number }
@@ -28,11 +28,11 @@ export function useBoardView() {
     ]
 
     const activeView = ref<'all' | 'starred'>('all')
-    const listsCollapsed = ref(false)
+    const isListsCollapsed = ref(false)
     const visibleLists = reactive<Record<string, boolean>>({})
     const expandedCompleted = reactive<Record<string, boolean>>({})
     const sortMode = reactive<Record<string, SortMode>>({})
-    const openPop = ref<PopState | null>(null)
+    const openPop = ref<IPopState | null>(null)
 
     function ensureVisible(label: string) {
         if (visibleLists[label] === undefined) visibleLists[label] = true
@@ -88,7 +88,7 @@ export function useBoardView() {
         for (const t of tabs.value) {
             const top = baseActive(t.label)
             let steps = 0
-            for (const todo of top) steps += todoList.stepsOf(todo).filter(s => !s.isCompleted).length
+            for (const todo of top) steps += todoList.findManyStepsByParent(todo).filter(s => !s.isCompleted).length
             counts[t.label] = top.length + steps
         }
         return counts
@@ -148,7 +148,7 @@ export function useBoardView() {
         tabs,
         sortOptions,
         activeView,
-        listsCollapsed,
+        isListsCollapsed,
         visibleLists,
         expandedCompleted,
         sortMode,

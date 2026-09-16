@@ -2,8 +2,13 @@ import { onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 
 const MASONRY_UNIT = 4
 const MASONRY_GAP = 8
-const nativeMasonry = typeof CSS !== 'undefined'
+const isNativeMasonry = typeof CSS !== 'undefined'
     && (CSS.supports('display', 'grid-lanes') || CSS.supports('grid-template-rows', 'masonry'))
+
+export interface IUseMasonryArgs {
+    breakpoint: Ref<string>
+    isMasonry: (breakpoint: string) => boolean
+}
 
 /**
  * Pure composable: span-based masonry fallback for the board grid.
@@ -11,14 +16,14 @@ const nativeMasonry = typeof CSS !== 'undefined'
  * `isMasonry` predicate, so this hook never touches Pinia. Lifecycle wiring
  * (watch + observers) is fully self-contained.
  */
-export function useMasonry(opts: { breakpoint: Ref<string>, isMasonry: (breakpoint: string) => boolean }) {
+export function useMasonry(args: IUseMasonryArgs) {
     const boardRef = ref<HTMLElement | null>(null)
 
     function layoutMasonry() {
         const board = boardRef.value
         if (!board) return
         const cards = [...board.children].filter((el) => el.classList.contains('list-card')) as Array<HTMLElement>
-        if (nativeMasonry || !opts.isMasonry(opts.breakpoint.value)) {
+        if (isNativeMasonry || !args.isMasonry(args.breakpoint.value)) {
             for (const card of cards) card.style.gridRowEnd = ''
             return
         }
@@ -51,16 +56,16 @@ export function useMasonry(opts: { breakpoint: Ref<string>, isMasonry: (breakpoi
         for (const child of [...board.children]) resizeObserver.observe(child)
         if (typeof MutationObserver !== 'undefined') {
             mutationObserver = new MutationObserver((mutations) => {
-                let structureChanged = false
+                let isStructureChanged = false
                 for (const m of mutations) {
                     if (m.type === 'childList') {
-                        structureChanged = true
+                        isStructureChanged = true
                         for (const node of [...m.addedNodes]) {
                             if (node instanceof HTMLElement) resizeObserver?.observe(node)
                         }
                     }
                 }
-                if (structureChanged) scheduleMasonry()
+                if (isStructureChanged) scheduleMasonry()
             })
             mutationObserver.observe(board, { childList: true, subtree: false })
         }
@@ -78,7 +83,7 @@ export function useMasonry(opts: { breakpoint: Ref<string>, isMasonry: (breakpoi
         mutationObserver = null
     }
 
-    watch(() => opts.breakpoint.value, () => {
+    watch(() => args.breakpoint.value, () => {
         layoutMasonry()
     })
 

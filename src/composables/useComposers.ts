@@ -1,16 +1,20 @@
 import { ref } from 'vue'
 import type { ITodo } from '../stores/todo-list'
 
-export type EditingState =
+export type IEditingState =
     | { kind: 'task', uuid: string }
     | { kind: 'step', parentUuid: string, index: number }
+
+export interface IUseComposersArgs {
+    closePop: () => void
+}
 
 /**
  * Pure composable: inline add / rename / edit / sub-add draft state machine.
  * No Pinia, no router — usable anywhere. The page passes `closePop` in and
  * owns all persistence (store calls stay in the page / store-touching hooks).
  */
-export function useComposers(opts: { closePop: () => void }) {
+export function useComposers(args: IUseComposersArgs) {
     const addingTo = ref<string | null>(null)
     const draftTitle = ref('')
     const draftDesc = ref('')
@@ -18,7 +22,7 @@ export function useComposers(opts: { closePop: () => void }) {
     const renaming = ref<string | null>(null)
     const renameDraft = ref('')
 
-    const editing = ref<EditingState | null>(null)
+    const editing = ref<IEditingState | null>(null)
     const editTitle = ref('')
     const editDesc = ref('')
     const editDue = ref('')
@@ -54,7 +58,7 @@ export function useComposers(opts: { closePop: () => void }) {
     }
 
     function startRename(listName: string) {
-        opts.closePop()
+        args.closePop()
         cancelComposer()
         renaming.value = listName
         renameDraft.value = listName
@@ -78,7 +82,7 @@ export function useComposers(opts: { closePop: () => void }) {
     }
 
     function startSubAdd(parentUuid: string) {
-        opts.closePop()
+        args.closePop()
         cancelComposer()
         subAddingTo.value = parentUuid
         subDraftTitle.value = ''

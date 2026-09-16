@@ -1,20 +1,20 @@
 import { defineComponent, Teleport, type PropType } from 'vue'
 import { RouterLink } from 'vue-router'
-import type { NavLinkType } from '../../stores/navigation'
+import type { INavLink } from '../../stores/navigation'
 import css from './navigation-drawer.module.css'
 
 export class NavigationDrawerComponent {
 
     private readonly props = {
         navLinks: {
-            type: Object as PropType<Array<NavLinkType>>,
+            type: Object as PropType<Array<INavLink>>,
             required: true
         },
-        modal: {
+        isModal: {
             type: Boolean as PropType<boolean>,
             default: false
         },
-        open: {
+        isOpen: {
             type: Boolean as PropType<boolean>,
             default: true,
         }
@@ -39,7 +39,7 @@ export class NavigationDrawerComponent {
             ))
             
             const renderNavigationDrawer = (
-                <div class={[css['navigation-drawer'], this.modal && css.modal, this.open && css.open]}>
+                <div class={[css['navigation-drawer'], this.isModal && css.modal, this.isOpen && css.open]}>
                     <div class={css['nav-buttons']}>
                         {renderLinks}
                     </div>
@@ -49,11 +49,11 @@ export class NavigationDrawerComponent {
             const renderModalNavigationDrawer = (
                 <Teleport to="body">
                     {renderNavigationDrawer}
-                    <span class={[css.scrim, this.open && css.open]} onClick={() => this.$emit('scrimClick')}></span>
+                    <span class={[css.scrim, this.isOpen && css.open]} onClick={() => this.$emit('scrimClick')}></span>
                 </Teleport>
             )
             return (
-                this.modal ? renderModalNavigationDrawer : renderNavigationDrawer
+                this.isModal ? renderModalNavigationDrawer : renderNavigationDrawer
             )
         }
     })

@@ -27,10 +27,10 @@ import { onMounted, ref } from 'vue'
 const props = withDefaults(defineProps<{
     headline: string
     description?: string
-    defaultOpen?: boolean
+    isDefaultOpen?: boolean
 }>(), {
     description: '',
-    defaultOpen: false
+    isDefaultOpen: false
 })
 
 const cancelAnimations = ref(new AbortController())
@@ -44,7 +44,7 @@ const accordionClick = async () => {
 
 
 onMounted(() => {
-    if (props.defaultOpen) {
+    if (props.isDefaultOpen) {
         accordionRef.value?.classList.add('open')
         accordionRef.value?.dispatchEvent(new Event('open'))
     }

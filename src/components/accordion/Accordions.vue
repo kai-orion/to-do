@@ -11,9 +11,9 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
-    single?: boolean
+    isSingle?: boolean
 }>(), {
-    single: true
+    isSingle: true
 })
 
 const accordionsRef = ref<HTMLElement | null>(null)
@@ -22,7 +22,7 @@ const getAccordions = () => [...accordionsRef.value?.children ?? []]
 const accordionOpen = (e: Event) => {
     const target = (e.target as HTMLElement)
 
-    if (props.single) {
+        if (props.isSingle) {
         for (const accordion of getAccordions()) {
             if (accordion !== target) {
                 accordion.classList.remove('open')

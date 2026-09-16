@@ -29,9 +29,9 @@ export class TodoStepEntity implements ITodoStep {
     private _headline: string
     private _isCompleted: boolean
 
-    constructor(params?: Partial<ITodoStep>) {
-        this._headline = params?.headline ?? 'Untitled step'
-        this._isCompleted = params?.isCompleted ?? false
+    constructor(args?: Partial<ITodoStep>) {
+        this._headline = args?.headline ?? 'Untitled step'
+        this._isCompleted = args?.isCompleted ?? false
     }
 
     public get headline(): string {
@@ -45,8 +45,8 @@ export class TodoStepEntity implements ITodoStep {
 export class TodoStepsEntity implements Iterable<ITodoStep> {
     private stepsArray: Array<ITodoStep>
 
-    constructor(stepArray: Array<ITodoStep>) {
-        this.stepsArray = stepArray
+    constructor(args: Array<ITodoStep>) {
+        this.stepsArray = args
     }
 
     [Symbol.iterator](): Iterator<ITodoStep, any, any> {
@@ -81,10 +81,10 @@ export class TodoEntity implements ITodo {
     public completedAt?: number
     public data: ITodoData
 
-    constructor(params?: PartialDeep<ITodo>) {
-        this.isCompleted = params?.isCompleted ?? false
-        this.isPinned = params?.isPinned ?? false
-        this.completedAt = (params as { completedAt?: number } | undefined)?.completedAt
+    constructor(args?: PartialDeep<ITodo>) {
+        this.isCompleted = args?.isCompleted ?? false
+        this.isPinned = args?.isPinned ?? false
+        this.completedAt = (args as { completedAt?: number } | undefined)?.completedAt
         this.data = {
             collectionName: 'All',
             creationTimestamp: new Date().getTime(),
@@ -93,7 +93,7 @@ export class TodoEntity implements ITodo {
             steps: new TodoStepsEntity([]),
             uuid: uuidv4(),
         }
-        for (const prop of Object.entries(params?.data ?? {})) {
+        for (const prop of Object.entries(args?.data ?? {})) {
             // @ts-ignore
             this.data[prop[0]] = prop[1]
         }
@@ -104,33 +104,6 @@ export interface ITodoStepData {
     headline: string
     isCompleted: boolean
     due?: string
-}
-
-/** Read steps defensively: persisted shapes vary (array / { stepsArray } / iterable). Pure. */
-export function readTodoSteps(todo: ITodo): Array<ITodoStepData> {
-    const s = todo.data.steps as unknown
-    const raw: Array<unknown> = Array.isArray(s)
-        ? s
-        : (s && typeof s === 'object' && Array.isArray((s as { stepsArray?: unknown }).stepsArray))
-            ? (s as { stepsArray: Array<unknown> }).stepsArray
-            : (() => {
-                try {
-                    return [...(s as Iterable<unknown>)]
-                } catch {
-                    return []
-                }
-            })()
-    return raw.map((item) => {
-        const o = item as Record<string, unknown>
-        const headline = (o['headline'] as string | undefined)
-            ?? (o['_headline'] as string | undefined)
-            ?? 'Untitled step'
-        const isCompleted = (o['isCompleted'] as boolean | undefined)
-            ?? (o['_isCompleted'] as boolean | undefined)
-            ?? false
-        const due = (o['due'] as string | undefined) ?? (o['_due'] as string | undefined)
-        return { headline, isCompleted, due }
-    })
 }
 
 const STORAGE_KEY = 'Symbol(__todo-list)'
@@ -266,12 +239,12 @@ export const useTodoListStore = defineStore('todo-list', () => {
         saveToStorage(todos.value)
     }
 
-    function create(todo: ITodo): void {
+    function insertOneTodo(todo: ITodo): void {
         todos.value.push(todo)
         saveToStorage(todos.value)
     }
 
-    function completeField(todo: ITodo, value: boolean): void {
+    function updateOneTodoCompletion(todo: ITodo, value: boolean): void {
         todo.isCompleted = value
         if (value) {
             todo.completedAt = new Date().getTime()
@@ -281,31 +254,54 @@ export const useTodoListStore = defineStore('todo-list', () => {
         saveToStorage(todos.value)
     }
 
-    function pinField(todo: ITodo, value: boolean): void {
+    function updateOneTodoPinned(todo: ITodo, value: boolean): void {
         todo.isPinned = value
         saveToStorage(todos.value)
     }
 
-    function remove(todo: ITodo) {
+    function removeOneTodo(todo: ITodo) {
         todos.value.splice(todos.value.findIndex(e => e === todo), 1)
         saveToStorage(todos.value)
     }
 
-    function findByUuid(uuid: string): ITodo | undefined {
+    function findOneTodoByUuid(uuid: string): ITodo | undefined {
         return todos.value.find(t => t.data.uuid === uuid)
     }
 
-    function stepsOf(todo: ITodo): Array<ITodoStepData> {
-        return readTodoSteps(todo)
+    /** Read steps defensively: persisted shapes vary (array / { stepsArray } / iterable). Pure. */
+    function findManyStepsByParent(parent: ITodo): Array<ITodoStepData> {
+        const s = parent.data.steps as unknown
+        const raw: Array<unknown> = Array.isArray(s)
+            ? s
+            : (s && typeof s === 'object' && Array.isArray((s as { stepsArray?: unknown }).stepsArray))
+                ? (s as { stepsArray: Array<unknown> }).stepsArray
+                : (() => {
+                    try {
+                        return [...(s as Iterable<unknown>)]
+                    } catch {
+                        return []
+                    }
+                })()
+        return raw.map((item) => {
+            const o = item as Record<string, unknown>
+            const headline = (o['headline'] as string | undefined)
+                ?? (o['_headline'] as string | undefined)
+                ?? 'Untitled step'
+            const isCompleted = (o['isCompleted'] as boolean | undefined)
+                ?? (o['_isCompleted'] as boolean | undefined)
+                ?? false
+            const due = (o['due'] as string | undefined) ?? (o['_due'] as string | undefined)
+            return { headline, isCompleted, due }
+        })
     }
 
-    function saveSteps(todo: ITodo, steps: Array<ITodoStepData>) {
-        todo.data.steps = steps.map(s => ({ ...s })) as unknown as Iterable<{ headline: string, isCompleted: boolean }>
+    function updateManyStepsByParent(parent: ITodo, steps: Array<ITodoStepData>) {
+        parent.data.steps = steps.map(s => ({ ...s })) as unknown as Iterable<{ headline: string, isCompleted: boolean }>
         saveToStorage(todos.value)
     }
 
-    function createTask(input: { headline: string, description?: string, collectionName: string, dueLabel?: string, pinned?: boolean, creationTimestamp?: number }) {
-        create(new TodoEntity({
+    function insertOneTodoFromFields(input: { headline: string, description?: string, collectionName: string, dueLabel?: string, pinned?: boolean, creationTimestamp?: number }) {
+        insertOneTodo(new TodoEntity({
             isCompleted: false,
             isPinned: input.pinned ?? false,
             data: {
@@ -318,89 +314,83 @@ export const useTodoListStore = defineStore('todo-list', () => {
         }))
     }
 
-    function updateTask(todo: ITodo, patch: { headline: string, description: string, dueLabel?: string }) {
+    function updateOneTodo(todo: ITodo, patch: { headline: string, description: string, dueLabel?: string }) {
         todo.data.headline = patch.headline
         todo.data.description = patch.description
         todo.data.dueLabel = patch.dueLabel
         saveToStorage(todos.value)
     }
 
-    function addStep(parent: ITodo, headline: string, due?: string) {
-        const steps = readTodoSteps(parent)
+    function insertOneStepByParent(parent: ITodo, headline: string, due?: string) {
+        const steps = findManyStepsByParent(parent)
         steps.push({ headline, isCompleted: false, due })
-        saveSteps(parent, steps)
+        updateManyStepsByParent(parent, steps)
     }
 
-    function updateStep(parent: ITodo, index: number, headline: string): boolean {
-        const steps = readTodoSteps(parent)
+    function updateOneStepByParent(parent: ITodo, index: number, headline: string): boolean {
+        const steps = findManyStepsByParent(parent)
         if (!steps[index]) return false
         steps[index] = { headline, isCompleted: steps[index].isCompleted }
-        saveSteps(parent, steps)
+        updateManyStepsByParent(parent, steps)
         return true
     }
 
-    function setStepCompleted(parent: ITodo, index: number, value: boolean) {
-        const steps = readTodoSteps(parent)
+    function updateOneStepCompletionByParent(parent: ITodo, index: number, value: boolean) {
+        const steps = findManyStepsByParent(parent)
         if (!steps[index]) return
         steps[index] = { headline: steps[index].headline, isCompleted: value }
-        saveSteps(parent, steps)
+        updateManyStepsByParent(parent, steps)
     }
 
-    function removeStep(parent: ITodo, index: number) {
-        const steps = readTodoSteps(parent)
+    function removeOneStepByParent(parent: ITodo, index: number) {
+        const steps = findManyStepsByParent(parent)
         steps.splice(index, 1)
-        saveSteps(parent, steps)
+        updateManyStepsByParent(parent, steps)
     }
 
-    /** Unindent: remove the step and promote it to a top-level task in the same list. */
-    function promoteStep(parent: ITodo, index: number) {
-        const steps = readTodoSteps(parent)
+    /**
+     * Remove a step and insert it as a top-level todo — in the parent's own
+     * list by default (unindent), or in `listName` when given (move to list).
+     */
+    function insertOneTodoFromStep(parent: ITodo, index: number, listName?: string) {
+        const steps = findManyStepsByParent(parent)
         const [step] = steps.splice(index, 1)
         if (!step) return
-        saveSteps(parent, steps)
-        createTask({ headline: step.headline, collectionName: parent.data.collectionName })
+        updateManyStepsByParent(parent, steps)
+        insertOneTodoFromFields({ headline: step.headline, collectionName: listName ?? parent.data.collectionName })
     }
 
-    /** Move a step out of its parent into another list as a top-level task. */
-    function moveStepToList(parent: ITodo, index: number, listName: string) {
-        const steps = readTodoSteps(parent)
-        const [step] = steps.splice(index, 1)
-        if (!step) return
-        saveSteps(parent, steps)
-        createTask({ headline: step.headline, collectionName: listName })
-    }
-
-    function moveTaskTo(todo: ITodo, listName: string) {
+    function updateOneTodoCollection(todo: ITodo, listName: string) {
         todo.data.collectionName = listName
         saveToStorage(todos.value)
     }
 
-    function retimeTask(todo: ITodo, creationTimestamp: number) {
+    function updateOneTodoTimestamp(todo: ITodo, creationTimestamp: number) {
         todo.data.creationTimestamp = creationTimestamp
         saveToStorage(todos.value)
     }
 
-    function addAttachment(todo: ITodo, fileName: string) {
+    function updateOneTodoAttachment(todo: ITodo, fileName: string) {
         const tag = `Attachment: ${fileName}`
         todo.data.description = todo.data.description ? `${todo.data.description}\n${tag}` : tag
         saveToStorage(todos.value)
     }
 
-    function renameCollection(oldName: string, next: string) {
+    function updateManyTodosCollection(oldName: string, next: string) {
         for (const todo of todos.value) {
             if (todo.data.collectionName === oldName) todo.data.collectionName = next
         }
         saveToStorage(todos.value)
     }
 
-    function removeInList(listName: string) {
+    function removeManyTodosByList(listName: string) {
         for (let i = todos.value.length - 1; i >= 0; i--) {
             if (todos.value[i].data.collectionName === listName) todos.value.splice(i, 1)
         }
         saveToStorage(todos.value)
     }
 
-    function removeCompletedIn(listName: string) {
+    function removeManyCompletedTodosByList(listName: string) {
         for (let i = todos.value.length - 1; i >= 0; i--) {
             const t = todos.value[i]
             if (t.data.collectionName === listName && t.isCompleted) todos.value.splice(i, 1)
@@ -408,7 +398,7 @@ export const useTodoListStore = defineStore('todo-list', () => {
         saveToStorage(todos.value)
     }
 
-    function removeOldCompleted(listName: string, cutoff: number) {
+    function removeManyOldCompletedTodosByList(listName: string, cutoff: number) {
         for (let i = todos.value.length - 1; i >= 0; i--) {
             const t = todos.value[i]
             if (t.data.collectionName === listName && t.isCompleted && (t.completedAt ?? 0) < cutoff) {
@@ -420,28 +410,26 @@ export const useTodoListStore = defineStore('todo-list', () => {
 
     return {
         todos,
-        create,
-        completeField,
-        pinField,
-        remove,
+        updateOneTodoCompletion,
+        updateOneTodoPinned,
+        removeOneTodo,
         persist,
-        findByUuid,
-        stepsOf,
-        saveSteps,
-        createTask,
-        updateTask,
-        addStep,
-        updateStep,
-        setStepCompleted,
-        removeStep,
-        promoteStep,
-        moveStepToList,
-        moveTaskTo,
-        retimeTask,
-        addAttachment,
-        renameCollection,
-        removeInList,
-        removeCompletedIn,
-        removeOldCompleted,
+        findOneTodoByUuid,
+        findManyStepsByParent,
+        updateManyStepsByParent,
+        insertOneTodoFromFields,
+        insertOneTodoFromStep,
+        updateOneTodo,
+        insertOneStepByParent,
+        updateOneStepByParent,
+        updateOneStepCompletionByParent,
+        removeOneStepByParent,
+        updateOneTodoCollection,
+        updateOneTodoTimestamp,
+        updateOneTodoAttachment,
+        updateManyTodosCollection,
+        removeManyTodosByList,
+        removeManyCompletedTodosByList,
+        removeManyOldCompletedTodosByList,
     }
 })

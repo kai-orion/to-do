@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import type { MdDialog, MdFab, MdOutlinedSelect } from '@material/web/all'
 import { computed, onMounted, ref } from 'vue'
-import { TodoEntity, useTodoListStore } from '../../stores/todo-list'
+import { useTodoListStore } from '../../stores/todo-list'
 import { useTodoTabsStore } from '../../stores/todo-tabs'
 
 const todoList = useTodoListStore()
@@ -94,15 +94,12 @@ onMounted(() => {
                 }
             }
 
-            todoList.create(new TodoEntity({
-                isCompleted: false,
-                isPinned: formData['is-pinned'],
-                data: {
-                    collectionName: formData['collection-name'],
-                    description: formData.description,
-                    headline: formData.headline
-                }
-            }))
+            todoList.insertOneTodoFromFields({
+                headline: formData.headline,
+                description: formData.description,
+                collectionName: formData['collection-name'],
+                pinned: formData['is-pinned'],
+            })
         }
     })
 })

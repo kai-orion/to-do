@@ -7,21 +7,12 @@
         "source.sortImports": "always",
     },
     "editor.formatOnSave": true,
-    "typescript.format.semicolons": "remove",
-    "javascript.format.semicolons": "remove",
-    "typescript.format.indentSwitchCase": true,
-    "typescript.preferences.quoteStyle": "single",
     "files.insertFinalNewline": true,
     "html.format.preserveNewLines": true,
     "editor.indentSize": 4,
     "editor.tabSize": 4,
     "files.eol": "\n",
-    "[css]": {
-        "editor.defaultFormatter": "vscode.css-language-features"
-    },
-    "[vue]": {
-        "editor.defaultFormatter": "Vue.volar",
-    },
     "html.format.wrapAttributes": "force-expand-multiline",
     "files.encoding": "utf8",
+    "js/ts.experimental.useTsgo": false
 }

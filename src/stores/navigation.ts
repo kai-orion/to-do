@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export type NavLinkType = {
+export type INavLink = {
     label: string
     url: string
     iconString: string
 }
 
 export const useNavigationStore = defineStore('navigation', () => {
-    const navLinks: Array<NavLinkType> = [
+    const navLinks: Array<INavLink> = [
         {
             iconString: 'home',
             label: 'Home',
@@ -21,20 +21,15 @@ export const useNavigationStore = defineStore('navigation', () => {
         },
     ]
 
-    const open = ref(true)
+    const isOpen = ref(true)
 
-    function setOpen(value: boolean) {
-        open.value = value
-    }
-
-    function toggleOpen() {
-        open.value = !open.value
+    function updateOpen(value: boolean) {
+        isOpen.value = value
     }
 
     return {
         navLinks,
-        open,
-        setOpen,
-        toggleOpen,
+        isOpen,
+        updateOpen,
     }
 })

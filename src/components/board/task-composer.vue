@@ -1,13 +1,13 @@
 <template>
     <div
         class="composer"
-        :class="[(isSub || checkSmall) && 'is-sub-composer', showRenameActions && 'editing-composer', showDragHint && 'editing-composer']"
+        :class="[(isSub || isCheckSmall) && 'is-sub-composer', hasRenameActions && 'editing-composer', hasDragHint && 'editing-composer']"
     >
         <div class="composer-row">
             <span
-                v-if="showCheck"
+                v-if="hasCheck"
                 class="composer-check"
-                :class="[checkSmall && 'small']"
+                :class="[isCheckSmall && 'small']"
             ></span>
             <input
                 ref="titleInputRef"
@@ -16,11 +16,11 @@
                 type="text"
                 :placeholder="titlePlaceholder"
                 @input="emit('update:title', ($event.target as HTMLInputElement).value)"
-                @keydown.enter="() => confirmOnEnter && emit('confirm')"
+                @keydown.enter="() => isConfirmOnEnter && emit('confirm')"
                 @keydown.esc="() => emit('cancel')"
             />
             <md-icon
-                v-if="showDragHint"
+                v-if="hasDragHint"
                 class="drag-hint"
             >swap_vert</md-icon>
         </div>
@@ -35,12 +35,12 @@
                 type="text"
                 placeholder="Details"
                 @input="emit('update:description', ($event.target as HTMLInputElement).value)"
-                @keydown.enter="() => confirmOnEnter && emit('confirm')"
+                @keydown.enter="() => isConfirmOnEnter && emit('confirm')"
                 @keydown.esc="() => emit('cancel')"
             />
         </div>
         <div
-            v-if="due !== undefined && !showRenameActions"
+            v-if="due !== undefined && !hasRenameActions"
             class="composer-row indented"
         >
             <button
@@ -72,7 +72,7 @@
             />
         </div>
         <div
-            v-if="due !== undefined && due && due !== 'Today' && due !== 'Tomorrow' && !showRenameActions"
+            v-if="due !== undefined && due && due !== 'Today' && due !== 'Tomorrow' && !hasRenameActions"
             class="composer-row indented"
         >
             <span class="due-label">{{ due }}</span>
@@ -83,7 +83,7 @@
             >Clear</button>
         </div>
         <div
-            v-if="showRenameActions"
+            v-if="hasRenameActions"
             class="composer-row indented"
         >
             <md-text-button @click="() => emit('cancel')">Cancel</md-text-button>
@@ -103,24 +103,24 @@ const props = withDefaults(defineProps<{
     description?: string
     due?: string
     titlePlaceholder?: string
-    showCheck?: boolean
-    checkSmall?: boolean
-    showDragHint?: boolean
+    hasCheck?: boolean
+    isCheckSmall?: boolean
+    hasDragHint?: boolean
     isSub?: boolean
     autofocus?: 'focus' | 'select' | 'none'
-    confirmOnEnter?: boolean
-    showRenameActions?: boolean
+    isConfirmOnEnter?: boolean
+    hasRenameActions?: boolean
 }>(), {
     description: undefined,
     due: undefined,
     titlePlaceholder: 'Title',
-    showCheck: true,
-    checkSmall: false,
-    showDragHint: false,
+    hasCheck: true,
+    isCheckSmall: false,
+    hasDragHint: false,
     isSub: false,
     autofocus: 'focus',
-    confirmOnEnter: true,
-    showRenameActions: false,
+    isConfirmOnEnter: true,
+    hasRenameActions: false,
 })
 
 const emit = defineEmits<{
