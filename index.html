@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="./src/assets/resources/img/to-do.png" type="image/icon type">
-    <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do</title>
+    <title>To-Do | Task Lists, Reminders &amp; Notes</title>
+    <meta name="description" content="To-Do is a free task management web app: create task lists, set reminders, add notes and attachments, and share lists across desktop and mobile.">
+    <meta name="keywords" content="to-do, todo, task manager, task lists, reminders, notes, productivity">
+    <meta name="author" content="bre97-web">
+    <meta name="application-name" content="To-Do">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="googlebot" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://todo.sandlada.com/to-do/">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#131318">
+    <meta name="color-scheme" content="light dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="To-Do">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="To-Do">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="To-Do | Task Lists, Reminders & Notes">
+    <meta property="og:description" content="To-Do is a free task management web app: create task lists, set reminders, add notes and attachments, and share lists across desktop and mobile.">
+    <meta property="og:url" content="https://todo.sandlada.com/to-do/">
+    <meta property="og:image" content="https://raw.githubusercontent.com/kai-orion/to-do/main/resources/todo-1280x640.png">
+    <meta property="og:image:alt" content="To-Do task management app preview">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="640">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="To-Do | Task Lists, Reminders & Notes">
+    <meta name="twitter:description" content="To-Do is a free task management web app: create task lists, set reminders, add notes and attachments, and share lists across desktop and mobile.">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/kai-orion/to-do/main/resources/todo-1280x640.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%233b82f6'/%3E%3Cpath d='M20 33l8 8 16-16' stroke='white' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/kai-orion/to-do/main/resources/to-do.png">
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "To-Do",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "url": "https://todo.sandlada.com/to-do/",
+        "description": "To-Do is a free task management web app: create task lists, set reminders, add notes and attachments, and share lists across desktop and mobile.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@type": "Person", "name": "bre97-web" }
+      }
+    </script>
     <style>
       #loading {
         background-color: white;
@@ -64,6 +107,7 @@
       import '@material/web/progress/circular-progress'
     </script>
     <!-- <script src="https://unpkg.com/@lottiefiles/lottie-player@0.4.0/dist/lottie-player.js"></script> -->
+  </head>
   <body>
     <div id="loading">
       <div>
@@ -82,6 +126,10 @@
       </div>
     </div>
     <div id="app"></div>
+    <noscript>
+      <h1>To-Do — Task Lists, Reminders &amp; Notes</h1>
+      <p>To-Do is a free task management web app for creating task lists, setting reminders, and adding notes. Please enable JavaScript to use it.</p>
+    </noscript>
     <script type="module" src="./src/main.ts"></script>
     <script>
       window.addEventListener('load', () => {
