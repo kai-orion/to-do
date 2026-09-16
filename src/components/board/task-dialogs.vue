@@ -140,9 +140,9 @@
 </template>
 
 <script setup lang="ts">
-import type { MdDialog } from '@material/web/all'
-import { onMounted, ref } from 'vue'
-import type { ITodoTab } from '../../stores/todo-tabs'
+import type { MdDialog } from '@material/web/all';
+import { onMounted, ref } from 'vue';
+import type { ITodoTab } from '../../stores/todo-tabs';
 
 // Pure component: no Pinia, no router. Dialog field values flow out via
 // emits; show/close is exposed so the top-level Layout (index.vue) —
@@ -283,14 +283,12 @@ onMounted(() => {
 }
 
 .chip-toggle {
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
     border-color: transparent;
 }
 
 .chip-active {
-    background-color: color-mix(in srgb, #0b57d0 14%, transparent);
-    border-color: #0b57d0;
-    color: #0b57d0;
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
     font-weight: 500;
 }
 
@@ -310,7 +308,6 @@ onMounted(() => {
     font-size: 14px;
     cursor: pointer;
     color: inherit;
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
 }
 
 .ct-desc {

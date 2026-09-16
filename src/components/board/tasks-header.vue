@@ -77,7 +77,7 @@ const emit = defineEmits<{
     width: 32px;
     height: 32px;
     border-radius: 999px;
-    background: linear-gradient(135deg, #0b57d0 0%, #b6d2ff 100%);
+    background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-primary-container) 100%);
 }
 
 .brand-check {

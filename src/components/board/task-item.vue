@@ -71,6 +71,8 @@
             class="pop-menu task-menu"
             @click.stop
         >
+            <md-elevation></md-elevation>
+
             <button
                 type="button"
                 class="menu-item"
@@ -412,7 +414,7 @@ const emit = defineEmits<{
     font-size: 12px;
     line-height: 16px;
     margin-top: 2px;
-    color: #0b57d0;
+    @apply text-secondary;
 }
 
 .row-actions {
@@ -440,7 +442,7 @@ const emit = defineEmits<{
 
 .task-star.starred md-icon {
     font-variation-settings: 'FILL' 1;
-    color: #0b57d0;
+    @apply text-secondary;
 }
 
 .task-row.is-sub {
@@ -458,9 +460,19 @@ const emit = defineEmits<{
     padding: 8px 0;
     border-radius: 12px;
     @apply bg-surface text-on-surface;
-    box-shadow:
-        0 4px 12px rgb(0 0 0 / 0.18),
-        0 1px 3px rgb(0 0 0 / 0.2);
+    transition-duration: 200ms;
+    transition-behavior: allow-discrete;
+    transition-property: border-color;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 1px;
+    --md-elevation-level: 3;
+}
+
+:root[dark] .pop-menu {
+    --md-elevation-level: 0;
+
+    border-color: var(--md-sys-color-outline);
 }
 
 .menu-item {
@@ -474,10 +486,6 @@ const emit = defineEmits<{
     line-height: 20px;
     cursor: pointer;
     text-align: left;
-}
-
-.menu-item:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
 }
 
 .menu-item:disabled {
@@ -495,7 +503,7 @@ const emit = defineEmits<{
     --md-icon-size: 20px;
     flex: none;
     width: 20px;
-    color: #0b57d0;
+    @apply text-secondary;
 }
 
 .menu-divider {
@@ -515,6 +523,6 @@ const emit = defineEmits<{
 }
 
 .editing-composer:focus-within {
-    background-color: color-mix(in srgb, #0b57d0 9%, transparent);
+    @apply text-secondary;
 }
 </style>

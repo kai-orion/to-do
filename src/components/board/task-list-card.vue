@@ -29,7 +29,6 @@
             <div
                 v-if="isListMenuOpen"
                 class="pop-menu list-menu"
-                :class="{ 'borderline': props.showMenuPopupBorder }"
                 @click.stop
             >
                 <md-elevation></md-elevation>
@@ -207,9 +206,7 @@ const props = withDefaults(defineProps<{
     isCardDropTarget: boolean
     isTaskDropTarget: boolean
     isDraggableCard: boolean
-    showMenuPopupBorder?: boolean
 }>(), {
-    showMenuPopupBorder: false,
 })
 
 const emit = defineEmits<{
@@ -349,10 +346,10 @@ function formatCompleted(ts: number | undefined): string {
     letter-spacing: 0.1px;
     cursor: pointer;
     user-select: none;
-    @apply text-primary;
+    @apply text-primary bg-transparent;
 
     &:hover {
-        @apply bg-on-primary;
+        @apply bg-on-primary text-primary;
     }
 
     & .add-task-icon {
@@ -383,13 +380,10 @@ function formatCompleted(ts: number | undefined): string {
     border-color: transparent;
     border-style: solid;
     border-width: 1px;
-
-    &.borderline {
-        border-color: var(--md-sys-color-outline-variant);
-    }
 }
 
 :root[dark] .pop-menu {
+    border-color: var(--md-sys-color-outline);
     --md-elevation-level: 0;
 }
 
@@ -416,10 +410,6 @@ function formatCompleted(ts: number | undefined): string {
     text-align: left;
 }
 
-.menu-item:hover:not(:disabled) {
-    background-color: var(--md-sys-color-on-surface);
-}
-
 .menu-item:disabled {
     opacity: 0.45;
     cursor: default;
@@ -429,7 +419,7 @@ function formatCompleted(ts: number | undefined): string {
     --md-icon-size: 20px;
     flex: none;
     width: 20px;
-    color: #0b57d0;
+    color: var(--md-sys-color-secondary);
 }
 
 .menu-spacer {
@@ -473,7 +463,7 @@ function formatCompleted(ts: number | undefined): string {
 }
 
 .completed-toggle:hover {
-    background-color: var(--md-sys-color-on-surface-variant);
+    @apply bg-surface-variant text-on-surface-variant;
 }
 
 .completed-arrow {
@@ -533,7 +523,7 @@ function formatCompleted(ts: number | undefined): string {
 
 .done-check-icon {
     --md-icon-size: 20px;
-    color: #0b57d0;
+    @apply text-on-surface;
     font-variation-settings: 'FILL' 0;
 }
 

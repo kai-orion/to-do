@@ -17,7 +17,7 @@
         <template #navigation-drawer>
             <div
                 class="tasks-drawer"
-                :class="{ 'border-right': isNavigationDrawerBorderRightEnabled, 'is-modal': isModal, 'is-open': navigation.isOpen }"
+                :class="{ 'is-modal': isModal, 'is-open': navigation.isOpen }"
             >
                 <TaskSidebar
                     :tabs="tabs"
@@ -73,7 +73,6 @@
                     :is-card-drop-target="dragCardOver === listName"
                     :is-task-drop-target="dragTaskOverList === listName"
                     :is-draggable-card="!draggingCard"
-                    :show-menu-popup-border="isCardMenuPopupBorderShown"
                     @card-dragstart="(e) => onCardDragStart(e, listName)"
                     @card-dragend="onCardDragEnd"
                     @card-dragover="(e) => onCardDragOver(e, listName)"
@@ -231,15 +230,11 @@ onMounted(() => {
 
 /**
  * isDark
- * 1. 用於控制 navigation-drawer 的 border-right 的顯示
- * 2. 用於控制 header 組件的 light dark 圖標切換
- * 3. 用於處理 light dark 主題切換
- * 4. 用於控制 card 的 show-menu-popup-border 屬性
+ * - 用於控制 header 組件的 light dark 圖標切換
+ * - 用於處理 light dark 主題切換
  */
 const theme = useMaterialThemeStore()
-const isNavigationDrawerBorderRightEnabled = computed(() => theme.isDark)
 const isLightModeIconShown = computed(() => theme.isDark)
-const isCardMenuPopupBorderShown = computed(() => theme.isDark)
 const handleLightDarkIconButtonSwitch = (isDarkValueOrToggle: boolean | ((isDark: boolean) => boolean)) => {
     if (typeof isDarkValueOrToggle === 'boolean') theme.updateIsDark(isDarkValueOrToggle)
     else theme.updateIsDark(isDarkValueOrToggle(theme.isDark))
@@ -540,10 +535,10 @@ onMounted(() => {
     border-right-color: transparent;
     border-right-style: solid;
     border-right-width: 1px;
+}
 
-    &.border-right {
-        border-right-color: var(--md-sys-color-outline-variant);
-    }
+:root[dark] .tasks-drawer {
+    border-right-color: var(--md-sys-color-outline-variant);
 }
 
 :root[compact] .tasks-drawer {

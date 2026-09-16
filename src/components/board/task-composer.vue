@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue';
 
 // Pure component: no Pinia, no router. Reusable inline composer for
 // add / rename / edit / sub-add. Tiny chip/menu/circle markup stays as
@@ -156,11 +156,11 @@ onMounted(() => {
 }
 
 .composer:focus-within {
-    background-color: color-mix(in srgb, #0b57d0 7%, transparent);
+    @apply text-on-surface;
 }
 
 .editing-composer:focus-within {
-    background-color: color-mix(in srgb, #0b57d0 9%, transparent);
+    @apply text-on-surface;
 }
 
 .is-sub-composer {
@@ -238,14 +238,10 @@ onMounted(() => {
     white-space: nowrap;
 }
 
-.chip:hover {
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
-}
-
 .chip-active {
-    background-color: color-mix(in srgb, #0b57d0 14%, transparent);
-    border-color: #0b57d0;
-    color: #0b57d0;
+    border-color: transparent;
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
     font-weight: 500;
 }
 
@@ -266,7 +262,7 @@ onMounted(() => {
 
 .due-clear {
     font-size: 12px;
-    color: #0b57d0;
+    color: var(--md-sys-color-primary);
     cursor: pointer;
 }
 
