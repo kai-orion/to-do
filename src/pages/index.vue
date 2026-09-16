@@ -73,6 +73,7 @@
                     :is-card-drop-target="dragCardOver === listName"
                     :is-task-drop-target="dragTaskOverList === listName"
                     :is-draggable-card="!draggingCard"
+                    :show-menu-popup-border="isCardMenuPopupBorderShown"
                     @card-dragstart="(e) => onCardDragStart(e, listName)"
                     @card-dragend="onCardDragEnd"
                     @card-dragover="(e) => onCardDragOver(e, listName)"
@@ -233,11 +234,12 @@ onMounted(() => {
  * 1. 用於控制 navigation-drawer 的 border-right 的顯示
  * 2. 用於控制 header 組件的 light dark 圖標切換
  * 3. 用於處理 light dark 主題切換
+ * 4. 用於控制 card 的 show-menu-popup-border 屬性
  */
 const theme = useMaterialThemeStore()
 const isNavigationDrawerBorderRightEnabled = computed(() => theme.isDark)
 const isLightModeIconShown = computed(() => theme.isDark)
-
+const isCardMenuPopupBorderShown = computed(() => theme.isDark)
 const handleLightDarkIconButtonSwitch = (isDarkValueOrToggle: boolean | ((isDark: boolean) => boolean)) => {
     if (typeof isDarkValueOrToggle === 'boolean') theme.updateIsDark(isDarkValueOrToggle)
     else theme.updateIsDark(isDarkValueOrToggle(theme.isDark))
@@ -589,7 +591,6 @@ onMounted(() => {
     min-height: 100%;
     width: 100%;
     overflow: auto;
-    @apply bg-surface-container;
 }
 
 .board {

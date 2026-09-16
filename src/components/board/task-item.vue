@@ -263,9 +263,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ITodo } from '../../stores/todo-list'
-import type { ITodoTab } from '../../stores/todo-tabs'
-import TaskComposer from './task-composer.vue'
+import type { ITodo } from '../../stores/todo-list';
+import type { ITodoTab } from '../../stores/todo-tabs';
+import TaskComposer from './task-composer.vue';
 
 // Pure component: no Pinia, no router. Subtasks stay as inline
 // <template v-for> here instead of a separate subtask component.
@@ -338,10 +338,6 @@ const emit = defineEmits<{
     border-radius: 8px;
 }
 
-.task-row:hover {
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
-}
-
 .task-row:hover .row-menu-btn,
 .task-row:hover .task-star {
     opacity: 1;
@@ -355,7 +351,7 @@ const emit = defineEmits<{
     right: 8px;
     height: 2px;
     border-radius: 2px;
-    background: #0b57d0;
+    background: var(--md-sys-color-secondary);
     z-index: 5;
 }
 

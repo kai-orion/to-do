@@ -63,6 +63,7 @@ const mediaQuery = useMediaQueryStore()
 
 <style scoped>
 @reference "../styles/tailwind.css";
+
 .product-page-layout {
     &>.content-view {
         display: grid;
@@ -88,8 +89,6 @@ const mediaQuery = useMediaQueryStore()
     max-height: 100svh;
     overflow: hidden;
     position: relative;
-
-    @apply bg-surface-container;
 
     &>.content-view {
         --content-view-content-margin: 0px;

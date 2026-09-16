@@ -44,7 +44,7 @@ const emit = defineEmits<{
     height: 64px;
     width: 100%;
     padding: 8px 16px 8px 8px;
-    @apply bg-surface-container text-on-surface;
+    @apply bg-surface-container-low text-on-surface;
 
     transition-duration: 200ms;
     transition-behavior: allow-discrete;

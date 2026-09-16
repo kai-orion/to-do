@@ -9,6 +9,8 @@
         @dragleave="emit('card-dragleave')"
         @drop="emit('card-drop', $event)"
     >
+        <md-elevation></md-elevation>
+
         <div
             class="card-head"
             :draggable="isDraggableCard ? true : undefined"
@@ -27,8 +29,10 @@
             <div
                 v-if="isListMenuOpen"
                 class="pop-menu list-menu"
+                :class="{ 'borderline': props.showMenuPopupBorder }"
                 @click.stop
             >
+                <md-elevation></md-elevation>
                 <div class="menu-section-label">Sort by</div>
                 <button
                     v-for="opt in sortOptions"
@@ -178,14 +182,14 @@
 </template>
 
 <script setup lang="ts">
-import type { ITodo } from '../../stores/todo-list'
-import TaskComposer from './task-composer.vue'
+import type { ITodo } from '../../stores/todo-list';
+import TaskComposer from './task-composer.vue';
 
 // Pure component: no Pinia, no router. Task rows come via default
 // <slot> so tiny row markup stays in task-item, not duplicated here.
 export type SortMode = 'my-order' | 'date' | 'deadline' | 'starred' | 'title'
 
-defineProps<{
+const props = withDefaults(defineProps<{
     listName: string
     sortMode: SortMode
     sortOptions: Array<{ value: SortMode, label: string }>
@@ -203,7 +207,10 @@ defineProps<{
     isCardDropTarget: boolean
     isTaskDropTarget: boolean
     isDraggableCard: boolean
-}>()
+    showMenuPopupBorder?: boolean
+}>(), {
+    showMenuPopupBorder: false,
+})
 
 const emit = defineEmits<{
     (e: 'card-dragstart', ev: DragEvent): void
@@ -247,15 +254,43 @@ function formatCompleted(ts: number | undefined): string {
 
 .list-card {
     @apply bg-surface text-on-surface;
+    position: relative;
     border: 1px solid var(--md-sys-color-outline-variant);
     border-radius: 16px;
     padding: 8px;
     min-width: 0;
-    transition: box-shadow 200ms ease, border-color 200ms ease;
+    transition: border-color 200ms ease;
+
+    --md-elevation-level: 0;
+
+    &:focus-within {
+        --md-elevation-level: 1;
+    }
+
+    &:hover {
+        --md-elevation-level: 2;
+    }
+
+    &:active {
+        --md-elevation-level: 3;
+        user-select: none;
+    }
 }
 
-.list-card:hover {
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.12), 0 4px 12px rgb(0 0 0 / 0.08);
+:root[darl] .list-card {
+    --md-elevation-level: 0;
+
+    &:focus-within {
+        --md-elevation-level: 0;
+    }
+
+    &:hover {
+        --md-elevation-level: 0;
+    }
+
+    &:active {
+        --md-elevation-level: 0;
+    }
 }
 
 .list-card:focus-within {
@@ -263,12 +298,12 @@ function formatCompleted(ts: number | undefined): string {
 }
 
 .list-card.card-drop-target {
-    border-left: 3px solid #0b57d0;
+    border-left: 3px solid var(--md-sys-color-primary);
     padding-left: 6px;
 }
 
 .list-card.card-task-target {
-    outline: 2px dashed color-mix(in srgb, #0b57d0 55%, transparent);
+    outline: 2px dashed var(--md-sys-color-primary);
     outline-offset: -6px;
 }
 
@@ -312,17 +347,20 @@ function formatCompleted(ts: number | undefined): string {
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.1px;
-    color: #0b57d0;
     cursor: pointer;
-}
+    user-select: none;
+    @apply text-primary;
 
-.add-task:hover {
-    background-color: color-mix(in srgb, #0b57d0 8%, transparent);
-}
+    &:hover {
+        @apply bg-on-primary;
+    }
 
-.add-task-icon {
-    --md-icon-size: 20px;
-    font-variation-settings: 'FILL' 0;
+    & .add-task-icon {
+        --md-icon-size: 20px;
+        font-variation-settings: 'FILL' 0;
+    }
+
+
 }
 
 /* ---- pop menus ---- */
@@ -336,9 +374,23 @@ function formatCompleted(ts: number | undefined): string {
     padding: 8px 0;
     border-radius: 12px;
     @apply bg-surface text-on-surface;
-    box-shadow:
-        0 4px 12px rgb(0 0 0 / 0.18),
-        0 1px 3px rgb(0 0 0 / 0.2);
+
+    --md-elevation-level: 3;
+
+    transition-duration: 200ms;
+    transition-behavior: allow-discrete;
+    transition-property: border-color;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 1px;
+
+    &.borderline {
+        border-color: var(--md-sys-color-outline-variant);
+    }
+}
+
+:root[dark] .pop-menu {
+    --md-elevation-level: 0;
 }
 
 .list-menu {
@@ -365,7 +417,7 @@ function formatCompleted(ts: number | undefined): string {
 }
 
 .menu-item:hover:not(:disabled) {
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+    background-color: var(--md-sys-color-on-surface);
 }
 
 .menu-item:disabled {
@@ -421,7 +473,7 @@ function formatCompleted(ts: number | undefined): string {
 }
 
 .completed-toggle:hover {
-    background-color: color-mix(in srgb, var(--md-sys-color-on-surface) 6%, transparent);
+    background-color: var(--md-sys-color-on-surface-variant);
 }
 
 .completed-arrow {
