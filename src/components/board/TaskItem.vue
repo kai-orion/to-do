@@ -54,7 +54,7 @@
                 @click.stop="emit('menu')"
                 aria-label="Task options"
             >
-                <md-icon>more_vert</md-icon>
+                <Icon name="more_vert" />
             </md-icon-button>
             <md-icon-button
                 class="task-star"
@@ -62,7 +62,7 @@
                 @click.stop="emit('star')"
                 aria-label="Star"
             >
-                <md-icon>{{ todo.isPinned ? 'star' : 'star_outline' }}</md-icon>
+                <Icon :name="todo.isPinned ? 'star' : 'star_outline'" />
             </md-icon-button>
         </span>
 
@@ -78,7 +78,7 @@
                 class="menu-item"
                 @click="emit('menu-edit')"
             >
-                <md-icon class="menu-icon">schedule</md-icon>
+                <Icon class="menu-icon" name="schedule" />
                 <span>Add deadline</span>
             </button>
             <button
@@ -86,7 +86,7 @@
                 class="menu-item"
                 @click="emit('start-sub-add')"
             >
-                <md-icon class="menu-icon">subdirectory_arrow_right</md-icon>
+                <Icon class="menu-icon" name="subdirectory_arrow_right" />
                 <span>Add a subtask</span>
             </button>
             <button
@@ -94,7 +94,7 @@
                 class="menu-item"
                 @click="emit('attach')"
             >
-                <md-icon class="menu-icon">change_history</md-icon>
+                <Icon class="menu-icon" name="change_history" />
                 <span>Add attachment</span>
             </button>
             <button
@@ -102,7 +102,7 @@
                 class="menu-item"
                 @click="emit('delete-task')"
             >
-                <md-icon class="menu-icon">delete</md-icon>
+                <Icon class="menu-icon" name="delete" />
                 <span>Delete</span>
             </button>
             <div class="menu-divider"></div>
@@ -113,7 +113,7 @@
                 class="menu-item"
                 @click="emit('move-task', t.label)"
             >
-                <md-icon class="menu-check">{{ todo.data.collectionName === t.label ? 'check' : '' }}</md-icon>
+                <Icon class="menu-check" :name="todo.data.collectionName === t.label ? 'check' : ''" />
                 <span>{{ t.label }}</span>
             </button>
             <button
@@ -121,7 +121,7 @@
                 class="menu-item"
                 @click="emit('new-list')"
             >
-                <md-icon class="menu-icon">playlist_add</md-icon>
+                <Icon class="menu-icon" name="playlist_add" />
                 <span>New list</span>
             </button>
         </div>
@@ -192,14 +192,14 @@
                     @click.stop="emit('step-menu', stepIdx)"
                     aria-label="Subtask options"
                 >
-                    <md-icon>more_vert</md-icon>
+                    <Icon name="more_vert" />
                 </md-icon-button>
                 <md-icon-button
                     class="task-star"
                     aria-label="Star subtask"
                     @click.stop="emit('star')"
                 >
-                    <md-icon>{{ todo.isPinned ? 'star' : 'star_outline' }}</md-icon>
+                    <Icon :name="todo.isPinned ? 'star' : 'star_outline'" />
                 </md-icon-button>
             </span>
 
@@ -213,7 +213,7 @@
                     class="menu-item"
                     @click="emit('menu-step-edit', stepIdx)"
                 >
-                    <md-icon class="menu-icon">schedule</md-icon>
+                    <Icon class="menu-icon" name="schedule" />
                     <span>Add deadline</span>
                 </button>
                 <button
@@ -221,7 +221,7 @@
                     class="menu-item"
                     @click="emit('step-unindent', stepIdx)"
                 >
-                    <md-icon class="menu-icon">format_indent_decrease</md-icon>
+                    <Icon class="menu-icon" name="format_indent_decrease" />
                     <span>Unindent</span>
                 </button>
                 <button
@@ -229,7 +229,7 @@
                     class="menu-item"
                     @click="emit('attach')"
                 >
-                    <md-icon class="menu-icon">change_history</md-icon>
+                    <Icon class="menu-icon" name="change_history" />
                     <span>Add attachment</span>
                 </button>
                 <button
@@ -237,7 +237,7 @@
                     class="menu-item"
                     @click="emit('step-delete', stepIdx)"
                 >
-                    <md-icon class="menu-icon">delete</md-icon>
+                    <Icon class="menu-icon" name="delete" />
                     <span>Delete</span>
                 </button>
                 <div class="menu-divider"></div>
@@ -248,7 +248,7 @@
                     class="menu-item"
                     @click="emit('step-move', stepIdx, t.label)"
                 >
-                    <md-icon class="menu-check">{{ todo.data.collectionName === t.label ? 'check' : '' }}</md-icon>
+                    <Icon class="menu-check" :name="todo.data.collectionName === t.label ? 'check' : ''" />
                     <span>{{ t.label }}</span>
                 </button>
                 <button
@@ -256,7 +256,7 @@
                     class="menu-item"
                     @click="emit('step-new-list', stepIdx)"
                 >
-                    <md-icon class="menu-icon">playlist_add</md-icon>
+                    <Icon class="menu-icon" name="playlist_add" />
                     <span>New list</span>
                 </button>
             </div>
@@ -265,6 +265,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue';
 import type { ITodo } from '@stores/todo-list';
 import type { ITodoTab } from '@stores/todo-tabs';
 import TaskComposer from '@components/board/TaskComposer.vue';

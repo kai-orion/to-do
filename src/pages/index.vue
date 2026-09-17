@@ -7,8 +7,8 @@
             >
                 <template #end>
                     <md-icon-button @click="() => handleLightDarkIconButtonSwitch((isDark) => !isDark)">
-                        <md-icon v-if="isLightModeIconShown">light_mode</md-icon>
-                        <md-icon v-else>dark_mode</md-icon>
+                        <Icon v-if="isLightModeIconShown" name="light_mode" />
+                        <Icon v-else name="dark_mode" />
                     </md-icon-button>
                 </template>
             </TasksHeader>
@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import TasksHeader from '@components/board/TasksHeader.vue'
+import Icon from '@components/Icon.vue'
 import TaskSidebarLayout from '@components/task-sidebar/TaskSidebarLayout.vue'
 import ProductLayout from '@layouts/ProductLayout.vue'
 import TaskBoardLayout from '@layouts/TaskBoardLayout.vue'

@@ -8,11 +8,11 @@
             @click="emit('menu-click')"
             aria-label="Menu"
         >
-            <md-icon>menu</md-icon>
+            <Icon name="menu" />
         </md-icon-button>
         <div class="brand">
             <span class="brand-mark">
-                <md-icon class="brand-check">check</md-icon>
+                <Icon class="brand-check" name="check" />
             </span>
             <span class="brand-name">Tasks</span>
         </div>
@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 
 const props = withDefaults(defineProps<{
     borderBottom?: boolean

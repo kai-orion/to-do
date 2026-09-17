@@ -15,14 +15,14 @@
                 @click="() => emit('select-all')"
                 label="All Tasks"
             >
-                <md-icon class="view-icon">task_alt</md-icon>
+                <Icon class="view-icon" name="task_alt" />
             </Tab>
             <Tab
                 :active="props.activeView === 'starred'"
                 @click="() => emit('select-starred')"
                 label="Starred"
             >
-                <md-icon class="view-icon">star</md-icon>
+                <Icon class="view-icon" name="star" />
             </Tab>
         </template>
 
@@ -51,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 import Lists from '@/components/task-sidebar/Lists.vue'
 import NewListButton from '@/components/task-sidebar/NewListButton.vue'
 import NewTaskFab from '@/components/task-sidebar/NewTaskFab.vue'

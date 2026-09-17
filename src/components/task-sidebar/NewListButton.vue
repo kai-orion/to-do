@@ -4,7 +4,7 @@
         class="new-list-row"
         tabindex="0"
     >
-        <md-icon>add</md-icon>
+        <Icon name="add" />
         <span class="label">New List</span>
         <md-ripple></md-ripple>
         <md-focus-ring></md-focus-ring>
@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-
+import Icon from '@components/Icon.vue'
 </script>
 
 <style scoped>

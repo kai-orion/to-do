@@ -44,7 +44,7 @@
                         @click="emit('close-create-task')"
                         aria-label="Close"
                     >
-                        <md-icon>close</md-icon>
+                        <Icon name="close" />
                     </md-icon-button>
                 </div>
                 <md-filled-text-field
@@ -54,7 +54,7 @@
                     name="task-title"
                 ></md-filled-text-field>
                 <div class="ct-row">
-                    <md-icon class="ct-icon">schedule</md-icon>
+                    <Icon class="ct-icon" name="schedule" />
                     <button
                         type="button"
                         class="chip chip-toggle"
@@ -105,7 +105,7 @@
                     </select>
                 </div>
                 <div class="ct-row">
-                    <md-icon class="ct-icon">notes</md-icon>
+                    <Icon class="ct-icon" name="notes" />
                     <md-filled-text-field
                         class="ct-desc"
                         label="Add description"
@@ -114,7 +114,7 @@
                     ></md-filled-text-field>
                 </div>
                 <div class="ct-row">
-                    <md-icon class="ct-icon">grid_view</md-icon>
+                    <Icon class="ct-icon" name="grid_view" />
                     <select
                         :value="ctList"
                         class="ct-select"
@@ -140,6 +140,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 import type { MdDialog } from '@material/web/all';
 import { onMounted, ref } from 'vue';
 import type { ITodoTab } from '@stores/todo-tabs';

@@ -3,11 +3,11 @@
         tabindex="0"
         class="button"
     >
-        <md-icon>settings</md-icon>
+        <Icon name="settings" />
         <span class="label">
             Settings
         </span>
-        <md-icon class="last-icon">open_in_new</md-icon>
+        <Icon class="last-icon" name="open_in_new" />
 
         <md-ripple></md-ripple>
         <md-focus-ring></md-focus-ring>
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-
+import Icon from '@components/Icon.vue'
 </script>
 
 <style scoped>

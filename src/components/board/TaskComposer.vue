@@ -19,16 +19,17 @@
                 @keydown.enter="() => isConfirmOnEnter && emit('confirm')"
                 @keydown.esc="() => emit('cancel')"
             />
-            <md-icon
+            <Icon
                 v-if="hasDragHint"
                 class="drag-hint"
-            >swap_vert</md-icon>
+                name="swap_vert"
+            />
         </div>
         <div
             v-if="description !== undefined"
             class="composer-row indented"
         >
-            <md-icon class="composer-icon">notes</md-icon>
+            <Icon class="composer-icon" name="notes" />
             <input
                 :value="description"
                 class="composer-details"
@@ -61,7 +62,7 @@
                 aria-label="Pick a date"
                 @click="() => dateInput?.showPicker?.()"
             >
-                <md-icon class="chip-clock">schedule</md-icon>
+                <Icon class="chip-clock" name="schedule" />
             </button>
             <input
                 :ref="(el) => { dateInput = el as HTMLInputElement | null }"
@@ -93,6 +94,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 import { onMounted, ref } from 'vue';
 
 // Pure component: no Pinia, no router. Reusable inline composer for

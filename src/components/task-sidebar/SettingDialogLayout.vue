@@ -21,7 +21,7 @@
                         :aria-current="item.id === activeId ? 'page' : undefined"
                         @click="activeId = item.id"
                     >
-                        <md-icon>{{ item.icon }}</md-icon>
+                        <Icon :name="item.icon" />
                         <span class="nav-label">{{ item.label }}</span>
                     </button>
                 </template>
@@ -34,7 +34,7 @@
                         aria-label="Close settings"
                         @click="close"
                     >
-                        <md-icon>close</md-icon>
+                        <Icon name="close" />
                     </md-icon-button>
                 </div>
 
@@ -62,7 +62,7 @@
                         @click="openMenu(variantMenuRef)"
                     >
                         <span>{{ variantLabel }}</span>
-                        <md-icon>keyboard_arrow_down</md-icon>
+                        <Icon name="keyboard_arrow_down" />
                     </button>
                 </div>
 
@@ -78,7 +78,7 @@
                         @click="openMenu(contrastMenuRef)"
                     >
                         <span>{{ contrastLabel }}</span>
-                        <md-icon>keyboard_arrow_down</md-icon>
+                        <Icon name="keyboard_arrow_down" />
                     </button>
                 </div>
 
@@ -162,6 +162,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 import SettingDialog from '@components/task-sidebar/SettingDialog.vue'
 import { useMaterialThemeStore } from '@stores/material-theme'
 import { useSettingDialog } from '@stores/setting-dialog'

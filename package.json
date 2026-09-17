@@ -21,7 +21,6 @@
         "@tailwindcss/vite": "^4.3.3",
         "@vue/tsconfig": "^0.9.1",
         "fake-indexeddb": "^6.2.5",
-        "material-symbols": "^0.47.3",
         "pinia": "^4.0.3",
         "rxjs": "^7.8.2",
         "uuid": "^14.0.2"

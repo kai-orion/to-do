@@ -4,7 +4,7 @@
         type="button"
         tabindex="1"
     >
-        <md-icon class="create-icon">add</md-icon>
+        <Icon class="create-icon" name="add" />
         <span class="create-label">New Task</span>
         <md-ripple></md-ripple>
         <md-focus-ring></md-focus-ring>
@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-
+import Icon from '@components/Icon.vue'
 </script>
 
 <style scoped>

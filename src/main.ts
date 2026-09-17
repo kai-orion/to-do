@@ -18,7 +18,6 @@ import '@styles/tailwind.css'
  */
 import '@fontsource/noto-sans'
 import '@material/web/all'
-import 'material-symbols/outlined.css'
 
 /**
  * Services

@@ -6,9 +6,10 @@
             @click="emits('toggle-lists-collapsed')"
         >
             <span class="lists-title">Lists</span>
-            <md-icon class="lists-arrow-icon">
-                {{ props.isListsCollapsed ? 'keyboard_arrow_right' : 'keyboard_arrow_down' }}
-            </md-icon>
+            <Icon
+                class="lists-arrow-icon"
+                :name="props.isListsCollapsed ? 'keyboard_arrow_right' : 'keyboard_arrow_down'"
+            />
         </button>
 
         <div
@@ -35,6 +36,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 import type { ITodoTab } from '@/stores/todo-tabs';
 
 const props = withDefaults(defineProps<{

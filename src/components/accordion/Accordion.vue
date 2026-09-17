@@ -11,7 +11,7 @@
             <span class="headline">{{ props.headline }}</span>
             <span class="description">{{ props.description }}</span>
             <md-icon-button class="action">
-                <md-icon class="icon">stat_minus_1</md-icon>
+                <Icon class="icon" name="remove" />
             </md-icon-button>
         </span>
 
@@ -22,6 +22,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 import { onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{

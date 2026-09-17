@@ -23,7 +23,7 @@
                 @click="emit('menu-toggle')"
                 aria-label="List options"
             >
-                <md-icon>more_vert</md-icon>
+                <Icon name="more_vert" />
             </md-icon-button>
 
             <div
@@ -40,7 +40,7 @@
                     class="menu-item"
                     @click="emit('sort', opt.value)"
                 >
-                    <md-icon class="menu-check">{{ sortMode === opt.value ? 'check' : '' }}</md-icon>
+                    <Icon class="menu-check" :name="sortMode === opt.value ? 'check' : ''" />
                     <span>{{ opt.label }}</span>
                 </button>
                 <div class="menu-divider"></div>
@@ -99,7 +99,7 @@
             class="add-task"
             @click="emit('add-start')"
         >
-            <md-icon class="add-task-icon">add_task</md-icon>
+            <Icon class="add-task-icon" name="add_task" />
             <span>Add a task</span>
         </button>
 
@@ -140,7 +140,7 @@
             class="completed-toggle"
             @click="emit('toggle-completed')"
         >
-            <md-icon class="completed-arrow">{{ isCompletedExpanded ? 'arrow_drop_down' : 'arrow_right' }}</md-icon>
+            <Icon class="completed-arrow" :name="isCompletedExpanded ? 'arrow_drop_down' : 'arrow_right'" />
             <span>Completed ({{ completedCount }})</span>
         </button>
         <ul
@@ -153,7 +153,7 @@
                 class="task-row is-done"
             >
                 <span class="done-check">
-                    <md-icon class="done-check-icon">check</md-icon>
+                    <Icon class="done-check-icon" name="check" />
                 </span>
                 <div class="task-text">
                     <div class="task-title">{{ todo.data.headline }}</div>
@@ -165,14 +165,14 @@
                         @click="emit('uncomplete-task', todo.data.uuid)"
                         aria-label="Mark not complete"
                     >
-                        <md-icon>add_task</md-icon>
+                        <Icon name="add_task" />
                     </md-icon-button>
                     <md-icon-button
                         class="task-delete"
                         @click="emit('delete-completed-task', todo.data.uuid)"
                         aria-label="Delete"
                     >
-                        <md-icon>delete</md-icon>
+                        <Icon name="delete" />
                     </md-icon-button>
                 </span>
             </li>
@@ -181,6 +181,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '@components/Icon.vue'
 import type { ITodo } from '@stores/todo-list';
 import type { ISortMode, ISortOption } from '@utils/board';
 import TaskComposer from '@components/board/TaskComposer.vue';
