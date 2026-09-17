@@ -1,5 +1,5 @@
 <template>
-    <Product>
+    <ProductLayout>
 
         <div class="bg-primary-container rounded-large m-4 p-8">
             <h1 class="text-on-primary-container text-display-large font-black">Settings</h1>
@@ -104,7 +104,7 @@
             </Accordion>
 
         </Accordions>
-    </Product>
+    </ProductLayout>
 </template>
 
 <script setup lang="ts">
@@ -112,7 +112,7 @@ import type { TMaterialContrastLevel, TMaterialVariant } from '@sandlada/mcu-hel
 import type { MdOutlinedSelect, MdSlider, MdSwitch } from '@material/web/all'
 import Accordion from '@components/accordion/Accordion.vue'
 import Accordions from '@components/accordion/Accordions.vue'
-import Product from '@layouts/Product.vue'
+import ProductLayout from '@layouts/ProductLayout.vue'
 import { MaterialVariants, useMaterialThemeStore } from '@stores/material-theme'
 
 const theme = useMaterialThemeStore()
@@ -148,11 +148,6 @@ const deleteWebsiteData = () => {
     flex-direction: column;
     gap: 16px;
 
-    @media (min-width: 1200px) {
-        max-width: 1200px;
-        margin: auto;
-    }
-
     &>.between {
         display: flex;
         justify-content: space-between;
@@ -167,5 +162,12 @@ const deleteWebsiteData = () => {
     & .title {
         @apply text-label-large text-on-secondary-container;
     }
+}
+
+/* Large and above: constrain the form width. Breakpoints arrive as
+   attributes on <html> from the media-query store — no hardcoded px. */
+:global(html:is([large], [extra-large])) .setting-form {
+    max-width: 1200px;
+    margin: auto;
 }
 </style>

@@ -5,19 +5,19 @@
     >
         <div :class="['navigation-drawer', isModal && 'modal', isOpen && 'open']">
             <div class="nav-buttons">
-                <RouterLink
+                <button
                     v-for="link in navLinks"
                     :key="link.url"
-                    :to="link.url"
+                    type="button"
                     class="nav-button"
-                    active-class="active"
-                    exact-active-class="extra-active"
+                    :class="[(link.url === activeUrl) && 'active']"
+                    @click="emit('navigate', link.url)"
                 >
                     <md-icon class="start">{{ link.iconString }}</md-icon>
                     <span class="label">{{ link.label }}</span>
                     <span class="alert"></span>
                     <md-ripple></md-ripple>
-                </RouterLink>
+                </button>
             </div>
             <md-elevation></md-elevation>
         </div>
@@ -31,39 +31,44 @@
         :class="['navigation-drawer', isModal && 'modal', isOpen && 'open']"
     >
         <div class="nav-buttons">
-            <RouterLink
+            <button
                 v-for="link in navLinks"
                 :key="link.url"
-                :to="link.url"
+                type="button"
                 class="nav-button"
-                active-class="active"
-                exact-active-class="extra-active"
+                :class="[(link.url === activeUrl) && 'active']"
+                @click="emit('navigate', link.url)"
             >
                 <md-icon class="start">{{ link.iconString }}</md-icon>
                 <span class="label">{{ link.label }}</span>
                 <span class="alert"></span>
                 <md-ripple></md-ripple>
-            </RouterLink>
+            </button>
         </div>
         <md-elevation></md-elevation>
     </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
 import type { INavLink } from '@stores/navigation'
 
+// Pure component: no Pinia, no router / RouterLink.
+// Active state arrives via props, navigation leaves via emits;
+// the *Layout owns useRoute / useRouter.
 withDefaults(defineProps<{
     navLinks: Array<INavLink>
+    activeUrl?: string
     isModal?: boolean
     isOpen?: boolean
 }>(), {
+    activeUrl: '/',
     isModal: false,
     isOpen: true,
 })
 
 const emit = defineEmits<{
     (e: 'scrimClick'): void
+    (e: 'navigate', url: string): void
 }>()
 </script>
 

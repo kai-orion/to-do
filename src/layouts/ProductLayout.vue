@@ -31,12 +31,7 @@
 
             <span class="navigation-drawer">
                 <template v-if="!$slots['navigation-drawer']">
-                    <NavigationDrawer
-                        @scrim-click="() => navigation.updateOpen(false)"
-                        :is-modal="mediaQuery.currentBreakpoint === 'compact'"
-                        :nav-links="navigation.navLinks"
-                        :is-open="navigation.isOpen"
-                    ></NavigationDrawer>
+                    <NavigationDrawerLayout></NavigationDrawerLayout>
                 </template>
                 <template v-else>
                     <slot name="navigation-drawer"></slot>
@@ -50,15 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@components/header/header.vue'
-import NavigationDrawer from '@components/navigation-drawer/navigation-drawer.vue'
+import Header from '@components/header/Header.vue'
+import NavigationDrawerLayout from '@layouts/NavigationDrawerLayout.vue'
 import { useMaterialThemeStore } from '@stores/material-theme'
-import { useMediaQueryStore } from '@stores/media-query'
 import { useNavigationStore } from '@stores/navigation'
 
 const theme = useMaterialThemeStore()
 const navigation = useNavigationStore()
-const mediaQuery = useMediaQueryStore()
 </script>
 
 <style scoped>
@@ -109,27 +102,10 @@ const mediaQuery = useMediaQueryStore()
             overflow: auto;
             border-radius: 0px;
 
-            @media (min-width: 600px) {
-                margin-top: 0px;
-                margin-bottom: var(--content-view-content-margin);
-                margin-left: var(--content-view-content-margin);
-                margin-right: var(--content-view-content-margin);
-            }
-
-            @media (min-width: 600px) {
-                border-radius: 28px;
-            }
-
             @apply bg-surface;
         }
 
         &>.navigation-drawer {
-            @media (min-width: 600px) {
-                margin-top: 0px;
-                margin-bottom: var(--content-view-content-margin);
-                margin-left: 0px;
-                margin-right: 0px;
-            }
         }
 
         &:not(.nav-open)>.content {
@@ -143,11 +119,30 @@ const mediaQuery = useMediaQueryStore()
                 @apply ease-emphasized-decelerate duration-400;
             }
         }
-
-        @media (min-width: 600px) {
-            --content-view-content-margin: 8px;
-        }
     }
+}
+
+/* Medium and above (not compact): content margins + rounded container.
+   Breakpoints arrive as attributes on <html> from the media-query store —
+   no hardcoded px here. The content element carries this component's scoped
+   attribute, so the global html prefix composes with scoped matching. */
+:global(html:not([compact])) .product-page-layout > .content-view {
+    --content-view-content-margin: 8px;
+}
+
+:global(html:not([compact])) .product-page-layout > .content-view > .content {
+    margin-top: 0px;
+    margin-bottom: var(--content-view-content-margin);
+    margin-left: var(--content-view-content-margin);
+    margin-right: var(--content-view-content-margin);
+    border-radius: 28px;
+}
+
+:global(html:not([compact])) .product-page-layout > .content-view > .navigation-drawer {
+    margin-top: 0px;
+    margin-bottom: var(--content-view-content-margin);
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 /* Expanded and above: the document scrolls instead of the inner content

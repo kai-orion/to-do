@@ -182,16 +182,17 @@
 
 <script setup lang="ts">
 import type { ITodo } from '@stores/todo-list';
-import TaskComposer from '@components/board/task-composer.vue';
+import type { ISortMode, ISortOption } from '@utils/board';
+import TaskComposer from '@components/board/TaskComposer.vue';
 
 // Pure component: no Pinia, no router. Task rows come via default
 // <slot> so tiny row markup stays in task-item, not duplicated here.
-export type SortMode = 'my-order' | 'date' | 'deadline' | 'starred' | 'title'
+export type { ISortMode, ISortOption };
 
 const props = withDefaults(defineProps<{
     listName: string
-    sortMode: SortMode
-    sortOptions: Array<{ value: SortMode, label: string }>
+    sortMode: ISortMode
+    sortOptions: Array<ISortOption>
     isDefaultList: boolean
     isListMenuOpen: boolean
     isAdding: boolean
@@ -216,7 +217,7 @@ const emit = defineEmits<{
     (e: 'card-dragleave'): void
     (e: 'card-drop', ev: DragEvent): void
     (e: 'menu-toggle'): void
-    (e: 'sort', mode: SortMode): void
+    (e: 'sort', mode: ISortMode): void
     (e: 'rename-start'): void
     (e: 'update:rename-draft', v: string): void
     (e: 'confirm-rename'): void

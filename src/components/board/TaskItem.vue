@@ -267,7 +267,7 @@
 <script setup lang="ts">
 import type { ITodo } from '@stores/todo-list';
 import type { ITodoTab } from '@stores/todo-tabs';
-import TaskComposer from '@components/board/task-composer.vue';
+import TaskComposer from '@components/board/TaskComposer.vue';
 
 // Pure component: no Pinia, no router. Subtasks stay as inline
 // <template v-for> here instead of a separate subtask component.
