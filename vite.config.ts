@@ -23,6 +23,8 @@ export default defineConfig({
         assetsInlineLimit: 4096,
         sourcemap: true,
         manifest: true,
+        minify: true,
+        cssMinify: true,
     },
     resolve: {
         alias: [
