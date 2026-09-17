@@ -64,4 +64,4 @@ export default defineConfig({
             },
         ],
     },
-}) satisfies UserConfig as UserConfig
+}) satisfies UserConfig

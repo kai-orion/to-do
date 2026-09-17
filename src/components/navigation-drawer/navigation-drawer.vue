@@ -1,4 +1,74 @@
-@reference "../../styles/tailwind.css";
+<template>
+    <Teleport
+        v-if="isModal"
+        to="body"
+    >
+        <div :class="['navigation-drawer', isModal && 'modal', isOpen && 'open']">
+            <div class="nav-buttons">
+                <RouterLink
+                    v-for="link in navLinks"
+                    :key="link.url"
+                    :to="link.url"
+                    class="nav-button"
+                    active-class="active"
+                    exact-active-class="extra-active"
+                >
+                    <md-icon class="start">{{ link.iconString }}</md-icon>
+                    <span class="label">{{ link.label }}</span>
+                    <span class="alert"></span>
+                    <md-ripple></md-ripple>
+                </RouterLink>
+            </div>
+            <md-elevation></md-elevation>
+        </div>
+        <span
+            :class="['scrim', isOpen && 'open']"
+            @click="emit('scrimClick')"
+        ></span>
+    </Teleport>
+    <div
+        v-else
+        :class="['navigation-drawer', isModal && 'modal', isOpen && 'open']"
+    >
+        <div class="nav-buttons">
+            <RouterLink
+                v-for="link in navLinks"
+                :key="link.url"
+                :to="link.url"
+                class="nav-button"
+                active-class="active"
+                exact-active-class="extra-active"
+            >
+                <md-icon class="start">{{ link.iconString }}</md-icon>
+                <span class="label">{{ link.label }}</span>
+                <span class="alert"></span>
+                <md-ripple></md-ripple>
+            </RouterLink>
+        </div>
+        <md-elevation></md-elevation>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { INavLink } from '@stores/navigation'
+
+withDefaults(defineProps<{
+    navLinks: Array<INavLink>
+    isModal?: boolean
+    isOpen?: boolean
+}>(), {
+    isModal: false,
+    isOpen: true,
+})
+
+const emit = defineEmits<{
+    (e: 'scrimClick'): void
+}>()
+</script>
+
+<style scoped>
+@reference "@styles/tailwind.css";
 .navigation-drawer {
     display: grid;
     grid-template-columns: 1fr;
@@ -132,3 +202,4 @@
         pointer-events: none;
     }
 }
+</style>

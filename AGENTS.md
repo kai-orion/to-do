@@ -18,7 +18,7 @@ No test, lint, or format scripts exist. `fake-indexeddb` is a dep reserved for f
 - Stores (`src/stores/`, Pinia setup-style `ref` + explicit `save()`): `todo-list`, `todo-tabs`, `material-theme`, `media-query`, `navigation`. No cross-store imports except components composing them.
 - Theme: `src/components/material-provider/material-theme-provider.tsx` injects `theme.cssText` (built with `createTheme`/`toCSS` from `@sandlada/mcu-helper`, `specVersion: '2025'`) into `<style id="material-theme-styles">` scoped to `.material-theme-provider-scoped, :root`, and toggles the `dark` attribute on `<html>`. `material-theme.ts` reads both flat and legacy `{ configuration: {...} }` persisted shapes — keep that compat.
 - Breakpoints: `media-query` store wraps `createBreakpointObserver` from `@sandlada/breakpoint` (`MEDIA_WIDTH_BREAKPOINTS`, keys `compact/medium/expanded/large/extra-large`, `dimension: 'width'`, `start(el)`/`stop()` lifecycle from `App.vue`) and syncs `currentWidth`/`currentBreakpoint` plus the breakpoint class onto `document.body`. `rxjs` is a direct dep (observer peer dep). `Product.vue` treats `compact` as modal drawer. Never hardcode `600px` elsewhere; read the store.
-- Components mix `.vue` SFCs and `.tsx` + `.module.css` (see `header/`, `navigation-drawer/`).
+- Components are all `.vue` SFCs (incl. `header/`, `navigation-drawer/` — formerly `.tsx` + `.module.css`, converted to SFCs with scoped `<style>`).
 - Design target: `prototype/` holds the goal-state UI references (currently `all-task.demo.png`, the Google Tasks multi-list board to replicate). It is the source of truth for task-list layout — consult it before building or changing task UI; the current `src/` implementation may not match it yet.
 - `src/pages/index.vue` is the top-level orchestrator for the board: it owns all Pinia access and logic dispatch. Extracted board modules must run independently and talk to `index.vue` only via `props`/`emits`. Do not let leaf modules reach into stores directly.
 
@@ -61,7 +61,7 @@ No test, lint, or format scripts exist. `fake-indexeddb` is a dep reserved for f
 
 ## Conventions & gotchas
 
-- `@material/web` tags (`md-*`): `vite.config.ts` marks them as custom elements in **both** `vue()` and `vueJsx()` plugin options — keep both when editing config.
+- `@material/web` tags (`md-*`): `vite.config.ts` marks them as custom elements in the `vue()` plugin options — keep it when editing config. (No JSX remains: `@vitejs/plugin-vue-jsx` was removed; do not reintroduce `.tsx`/`.jsx`.)
 - Styling: tokens/utilities come from `@sandlada/material-design-css` imports in `src/styles/tailwind.css` (e.g. `bg-surface`, `bg-surface-container`, `ease-emphasized-decelerate`). Scoped `<style>` blocks must start with `@reference "@styles/tailwind.css";` for `@apply` to work (see `Product.vue`).
 - Imports: use path alias for all `src/`-internal imports — never `../` / `./`. `vite.config.ts` (`resolve.alias`) and `tsconfig.json` (`paths`) define the same set: `@/*` → `src/*`, plus `@components/*`, `@composables/*`, `@layouts/*`, `@pages/*`, `@router/*`, `@stores/*`, `@styles/*`, `@utils/*`. Keep both configs in sync when adding/removing top-level `src/` folders.
 - TS: `verbatimModuleSyntax: true` — use `import type` for type-only imports. `strict`, `target/module ES2022`.
