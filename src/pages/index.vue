@@ -41,15 +41,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
 import TasksHeader from '@components/board/TasksHeader.vue'
-import TaskBoardLayout from '@layouts/TaskBoardLayout.vue'
-import TaskSidebarLayout from '@layouts/TaskSidebarLayout.vue'
+import TaskSidebarLayout from '@components/task-sidebar/TaskSidebarLayout.vue'
 import ProductLayout from '@layouts/ProductLayout.vue'
+import TaskBoardLayout from '@layouts/TaskBoardLayout.vue'
 import { useMaterialThemeStore } from '@stores/material-theme'
 import { useMediaQueryStore } from '@stores/media-query'
 import { useNavigationStore } from '@stores/navigation'
 import { useTodoTabsStore } from '@stores/todo-tabs'
+import { computed, onMounted, reactive, ref } from 'vue'
 
 // Page orchestrator: owns shared filter state (single source for the
 // sidebar + board Layouts) plus header/theme/chrome. Board-local state

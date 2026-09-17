@@ -9,8 +9,10 @@
 @import "@sandlada/material-design-css/prebuilt-colors/tonal-spot/h0-2025.css";
 @import "@sandlada/material-design-css/color/tw.css";
 @import "@sandlada/material-design-css/shape/tw.css";
+@import "@sandlada/material-design-css/shape/variables.css";
 @import "@sandlada/material-design-css/spacing/tw.css";
 @import "@sandlada/material-design-css/typography/tw.css";
+@import "@sandlada/material-design-css/typography/variables.css";
 @import "@sandlada/material-design-css/motion/tw.css";
 
 @theme {
