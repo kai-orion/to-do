@@ -107,13 +107,16 @@ const rootClasses = computed<ClassValue>(() => ({
     @apply bg-surface text-on-surface;
 
     transition-property: display, opacity, transform, border-color;
-    transition-duration: 200ms;
+    transition-duration: 250ms;
     transition-behavior: allow-discrete;
+    transition-timing-function: var(--md-sys-motion-easing-emphasized, cubic-bezier(0.2, 0.0, 0, 1.0));
 
     &:not(.open) {
         transform: translateX(-100%);
         opacity: 0;
         display: none;
+        transition-duration: 200ms;
+        transition-timing-function: var(--md-sys-motion-easing-emphasized-accelerate, cubic-bezier(0.3, 0.0, 0.8, 0.15));
 
         @starting-style {
             transform: translateX(0%);
