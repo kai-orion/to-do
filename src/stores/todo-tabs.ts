@@ -30,9 +30,6 @@ export const useTodoTabsStore = defineStore('todo-tabs', () => {
 
     if (tabs.value.length === 0) {
         tabs.value.push({ label: 'Today' })
-        tabs.value.push({ label: 'Blog' })
-        tabs.value.push({ label: 'MDC' })
-        tabs.value.push({ label: 'Concepts' })
         saveToStorage(tabs.value)
     }
 

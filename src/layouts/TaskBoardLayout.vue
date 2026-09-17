@@ -1,10 +1,4 @@
 <template>
-    <span
-        aria-hidden="true"
-        class="anchor-top"
-        aria-label="用於控制header border-bottom 屬性的錨點元素"
-        ref="anchor-top"
-    ></span>
 
     <div class="board-scroll">
         <div
@@ -152,19 +146,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, useTemplateRef } from 'vue'
 import TaskDialogs from '@components/board/TaskDialogs.vue'
 import TaskItem from '@components/board/TaskItem.vue'
 import TaskListCard from '@components/board/TaskListCard.vue'
 import { useBoardDialogs, type IDialogApi } from '@composables/useBoardDialogs'
 import { useBoardDrag } from '@composables/useBoardDrag'
 import { useComposers } from '@composables/useComposers'
-import { useIntersectionAnchor } from '@composables/useIntersectionAnchor'
 import { useMasonry } from '@composables/useMasonry'
 import { useMediaQueryStore } from '@stores/media-query'
 import { useTodoListStore, type ITodo } from '@stores/todo-list'
 import { useTodoTabsStore } from '@stores/todo-tabs'
 import type { ISortMode, ISortOption } from '@utils/board'
+import { computed, reactive, ref } from 'vue'
 
 export type IBoardPopState =
     | { type: 'list', name: string }
@@ -293,10 +286,6 @@ function setSort(listName: string, mode: ISortMode) {
 function isDefaultList(listName: string): boolean {
     return todoTabs.tabs.length > 0 && todoTabs.tabs[0].label === listName
 }
-
-// ---- anchor for header border (owned here with the board scroll) ----
-const ancorTopElementRef = useTemplateRef<HTMLElement>('anchor-top')
-const intersection = useIntersectionAnchor(ancorTopElementRef)
 
 const attachInputRef = ref<HTMLInputElement | null>(null)
 const pendingAttachUuid = ref<string | null>(null)
@@ -539,7 +528,6 @@ const { boardRef } = useMasonry({
 defineExpose({
     openCreateList,
     openCreateDialog,
-    intersection,
     boardRef,
 })
 </script>

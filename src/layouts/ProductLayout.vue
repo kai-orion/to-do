@@ -1,13 +1,23 @@
 <template>
     <div class="product-page-layout">
 
-        <slot name="header"></slot>
+        <slot
+            name="header"
+            :showBottomBorder="!intersection.isVisible.value"
+        ></slot>
 
         <main
             class="content-view"
             :class="[navigation.isOpen && 'nav-open']"
         >
             <span class="content">
+                <span
+                    aria-hidden="true"
+                    class="anchor-top"
+                    aria-label="用於控制header border-bottom 屬性的錨點元素"
+                    ref="anchor-top"
+                ></span>
+
                 <slot></slot>
             </span>
 
@@ -17,16 +27,27 @@
 
         </main>
 
-
     </div>
 </template>
 
 <script setup lang="ts">
+import { useIntersectionAnchor } from '@/composables/useIntersectionAnchor';
 import { useMaterialThemeStore } from '@stores/material-theme';
 import { useNavigationStore } from '@stores/navigation';
+import { useTemplateRef } from 'vue';
+
+defineSlots<{
+    header(props: { showBottomBorder: boolean }): any
+    default(): any
+    'navigation-drawer'(): any
+}>()
 
 const theme = useMaterialThemeStore()
 const navigation = useNavigationStore()
+
+// anchor for header border (owned here with the board scroll)
+const ancorTopElementRef = useTemplateRef<HTMLElement>('anchor-top')
+const intersection = useIntersectionAnchor(ancorTopElementRef)
 </script>
 
 <style scoped>

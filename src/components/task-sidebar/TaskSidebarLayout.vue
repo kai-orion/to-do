@@ -39,9 +39,12 @@
         </template>
 
         <template #end>
-            <LinkToSettingPageButton></LinkToSettingPageButton>
+            <LinkToSettingPageButton @click="() => { settingDialog.toggle(true); navigation.updateOpen(false) }">
+            </LinkToSettingPageButton>
         </template>
     </TaskSidebar>
+
+    <SettingDialogLayout></SettingDialogLayout>
 
 </template>
 
@@ -50,6 +53,7 @@ import Lists from '@/components/task-sidebar/Lists.vue'
 import NewListButton from '@/components/task-sidebar/NewListButton.vue'
 import NewTaskFab from '@/components/task-sidebar/NewTaskFab.vue'
 import Tab from '@/components/task-sidebar/Tab.vue'
+import { useSettingDialog } from '@/stores/setting-dialog.js'
 import TaskSidebar from '@components/task-sidebar/TaskSidebar.vue'
 import { useMediaQueryStore } from '@stores/media-query'
 import { useNavigationStore } from '@stores/navigation'
@@ -57,6 +61,7 @@ import { useTodoListStore } from '@stores/todo-list'
 import type { ITodoTab } from '@stores/todo-tabs'
 import { computed } from 'vue'
 import LinkToSettingPageButton from './LinkToSettingPageButton.vue'
+import SettingDialogLayout from './SettingDialogLayout.vue'
 
 const props = defineProps<{
     tabs: Array<ITodoTab>
@@ -74,6 +79,7 @@ const emit = defineEmits<{
     (e: 'create-task'): void
 }>()
 
+const settingDialog = useSettingDialog()
 const mediaQuery = useMediaQueryStore()
 const navigation = useNavigationStore()
 const todoList = useTodoListStore()

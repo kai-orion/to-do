@@ -101,9 +101,12 @@ const rootClasses = computed<ClassValue>(() => ({
     width: 260px;
     height: 100%;
     gap: 0;
+    border-right-width: 1px;
+    border-right-color: transparent;
+    border-right-style: solid;
     @apply bg-surface text-on-surface;
 
-    transition-property: display, opacity, transform;
+    transition-property: display, opacity, transform, border-color;
     transition-duration: 200ms;
     transition-behavior: allow-discrete;
 

@@ -42,8 +42,11 @@ const emit = defineEmits<{
     align-items: center;
     gap: 4px;
     height: 64px;
+    max-height: 64px;
+    overflow: clip;
     width: 100%;
-    padding: 8px 16px 8px 8px;
+    box-sizing: border-box;
+    padding: 0px 8px;
     @apply bg-surface-container-low text-on-surface;
 
     transition-duration: 200ms;

@@ -136,101 +136,36 @@ export const useTodoListStore = defineStore('todo-list', () => {
         const seed: Array<ITodo> = [
             new TodoEntity({
                 isCompleted: false,
-                data: { headline: '在线灵动岛', collectionName: 'Today', creationTimestamp: nextTs() },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: { headline: 'as any v.s. as unknown', collectionName: 'Blog', creationTimestamp: nextTs() },
-            }),
-            new TodoEntity({
-                isCompleted: false,
                 data: {
-                    headline: 'AI 回答收录系列',
-                    description: '将一些AI对话中展现的知识记录。',
-                    collectionName: 'Blog',
-                    creationTimestamp: nextTs(),
-                },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: {
-                    headline: 'Series: Vue',
-                    description: '修整。',
-                    collectionName: 'Blog',
-                    creationTimestamp: nextTs(),
-                    steps: new TodoStepsEntity([
-                        new TodoStepEntity({ headline: 'Update Lifecircle Hooks', isCompleted: false }),
-                    ]),
-                },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: {
-                    headline: '全域拖动位置检测',
-                    description: '预定义屏幕各区域，拖动元素后检测目标落在哪个区域。',
-                    collectionName: 'MDC',
-                    creationTimestamp: nextTs(),
-                },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: { headline: 'Drawer左右拖动切换位置', collectionName: 'MDC', creationTimestamp: nextTs() },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: { headline: 'BottomSheet和SideSheet拖动互换', collectionName: 'MDC', creationTimestamp: nextTs() },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: {
-                    headline: '屏幕隐形层：页面最顶层有一个透明预先布局的元素专用于快速定位',
-                    collectionName: 'MDC',
-                    creationTimestamp: nextTs(),
-                },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: { headline: 'Comp: Menu', collectionName: 'MDC', creationTimestamp: nextTs() },
-            }),
-            new TodoEntity({
-                isCompleted: false,
-                data: { headline: '有声读书 - 视频', collectionName: 'Concepts', creationTimestamp: nextTs() },
-            }),
-        ]
-        const completedSeeds: Array<{ list: string, count: number }> = [
-            { list: 'Blog', count: 16 },
-            { list: 'MDC', count: 13 },
-        ]
-        for (const { list, count } of completedSeeds) {
-            for (let i = 0; i < count; i++) {
-                seed.push(new TodoEntity({
-                    isCompleted: true,
-                    completedAt: new Date(2025, 10, 6).getTime() - i * 86400000,
-                    data: {
-                        headline: `Completed ${list} ${i + 1}`,
-                        collectionName: list,
-                        creationTimestamp: nextTs(),
-                    },
-                }))
-            }
-        }
-        // Today completed items mirror the prototype's expanded state.
-        const todayDone: Array<{ headline: string, at: number }> = [
-            { headline: '电脑+USB-C', at: new Date(2026, 5, 25).getTime() },
-            { headline: 'Mdc: FAB - Hidden prop', at: new Date(2025, 11, 4).getTime() },
-            { headline: 'C#: Language Syntax Basic', at: new Date(2025, 10, 6).getTime() },
-        ]
-        for (const item of todayDone) {
-            seed.push(new TodoEntity({
-                isCompleted: true,
-                completedAt: item.at,
-                data: {
-                    headline: item.headline,
+                    headline: '欢迎使用待办事项',
+                    description: '这里是你的 Today 列表，点击新建按钮创建第一条属于你的任务。',
                     collectionName: 'Today',
                     creationTimestamp: nextTs(),
                 },
-            }))
-        }
+            }),
+            new TodoEntity({
+                isCompleted: false,
+                data: {
+                    headline: '勾选以完成任务',
+                    description: '点击任务左侧的复选框，即可将它标记为已完成。',
+                    collectionName: 'Today',
+                    creationTimestamp: nextTs(),
+                },
+            }),
+            new TodoEntity({
+                isCompleted: false,
+                data: {
+                    headline: '试试子任务和拖拽排序',
+                    description: '点击任务展开子步骤，也可以通过拖拽调整任务顺序。',
+                    collectionName: 'Today',
+                    creationTimestamp: nextTs(),
+                    steps: new TodoStepsEntity([
+                        new TodoStepEntity({ headline: '为这条任务添加一个子步骤', isCompleted: false }),
+                        new TodoStepEntity({ headline: '拖动这条任务调整它的位置', isCompleted: false }),
+                    ]),
+                },
+            }),
+        ]
         todos.value.push(...seed)
         saveToStorage(todos.value)
     }

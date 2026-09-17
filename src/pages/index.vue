@@ -1,8 +1,8 @@
 <template>
     <ProductLayout>
-        <template #header>
+        <template #header="{ showBottomBorder }">
             <TasksHeader
-                :border-bottom="isHeaderBordered"
+                :border-bottom="showBottomBorder"
                 @menu-click="() => navigation.updateOpen(!navigation.isOpen)"
             >
                 <template #end>
@@ -70,7 +70,6 @@ for (const t of todoTabs.tabs) {
 }
 
 const boardRef = ref<{ openCreateList: () => void, openCreateDialog: () => void, intersection: { isVisible: { value: boolean } } } | null>(null)
-const isHeaderBordered = computed(() => !(boardRef.value?.intersection?.isVisible?.value ?? true))
 
 const isLightModeIconShown = computed(() => theme.isDark)
 function handleLightDarkIconButtonSwitch(isDarkValueOrToggle: boolean | ((isDark: boolean) => boolean)) {
