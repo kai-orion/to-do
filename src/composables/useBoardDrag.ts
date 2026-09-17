@@ -1,6 +1,6 @@
 import { ref } from 'vue'
-import { useTodoListStore, type ITodo } from '../stores/todo-list'
-import { useTodoTabsStore } from '../stores/todo-tabs'
+import { useTodoListStore, type ITodo } from '@stores/todo-list'
+import { useTodoTabsStore } from '@stores/todo-tabs'
 
 export type DropPos = 'before' | 'after'
 

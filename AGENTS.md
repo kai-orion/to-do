@@ -62,8 +62,8 @@ No test, lint, or format scripts exist. `fake-indexeddb` is a dep reserved for f
 ## Conventions & gotchas
 
 - `@material/web` tags (`md-*`): `vite.config.ts` marks them as custom elements in **both** `vue()` and `vueJsx()` plugin options — keep both when editing config.
-- Styling: tokens/utilities come from `@sandlada/material-design-css` imports in `src/styles/tailwind.css` (e.g. `bg-surface`, `bg-surface-container`, `ease-emphasized-decelerate`). Scoped `<style>` blocks must start with `@reference "../styles/tailwind.css";` for `@apply` to work (see `Product.vue`).
-- Imports: use relative `../` paths as existing code does. Vite defines `@` → `./src/`, but nothing uses it and `tsconfig` `paths` don't cover bare `@`; don't introduce it.
+- Styling: tokens/utilities come from `@sandlada/material-design-css` imports in `src/styles/tailwind.css` (e.g. `bg-surface`, `bg-surface-container`, `ease-emphasized-decelerate`). Scoped `<style>` blocks must start with `@reference "@styles/tailwind.css";` for `@apply` to work (see `Product.vue`).
+- Imports: use path alias for all `src/`-internal imports — never `../` / `./`. `vite.config.ts` (`resolve.alias`) and `tsconfig.json` (`paths`) define the same set: `@/*` → `src/*`, plus `@components/*`, `@composables/*`, `@layouts/*`, `@pages/*`, `@router/*`, `@stores/*`, `@styles/*`, `@utils/*`. Keep both configs in sync when adding/removing top-level `src/` folders.
 - TS: `verbatimModuleSyntax: true` — use `import type` for type-only imports. `strict`, `target/module ES2022`.
 - IDs: use the `uuid` package (v14, already a dependency). `src/utils/uuid.ts:10` (`makeUuid`, hand-rolled RFC4122) is legacy — don't extend it; migrate call sites (currently `stores/todo-list.ts:90`) to `uuid` when touching that code.
 - Persistence: simple config (theme) → `localStorage` with existing `Symbol(__...)` key strings. Complex/stateful data (todos, collections/tabs) → IndexedDB (migration pending; current `localStorage` in `todo-list`/`todo-tabs` is the tech debt to replace). Settings "Clear" wipes `localStorage` (`src/pages/settings.vue`) — extend it to IndexedDB once migration lands.

@@ -181,8 +181,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ITodo } from '../../stores/todo-list';
-import TaskComposer from './task-composer.vue';
+import type { ITodo } from '@stores/todo-list';
+import TaskComposer from '@components/board/task-composer.vue';
 
 // Pure component: no Pinia, no router. Task rows come via default
 // <slot> so tiny row markup stays in task-item, not duplicated here.
@@ -247,7 +247,7 @@ function formatCompleted(ts: number | undefined): string {
 </script>
 
 <style scoped>
-@reference "../../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 .list-card {
     @apply bg-surface text-on-surface;

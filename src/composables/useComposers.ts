@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { ITodo } from '../stores/todo-list'
+import type { ITodo } from '@stores/todo-list'
 
 export type IEditingState =
     | { kind: 'task', uuid: string }

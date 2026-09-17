@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ITodoTab } from '../../stores/todo-tabs';
+import type { ITodoTab } from '@stores/todo-tabs';
 
 const props = defineProps<{
     tabs: Array<ITodoTab>
@@ -101,7 +101,7 @@ const emit = defineEmits<{
 </script>
 
 <style scoped>
-@reference "../../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 .task-sidebar {
     display: flex;

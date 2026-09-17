@@ -59,8 +59,8 @@
 <script setup lang="ts">
 import type { MdDialog, MdFab, MdOutlinedSelect } from '@material/web/all'
 import { computed, onMounted, ref } from 'vue'
-import { useTodoListStore } from '../../stores/todo-list'
-import { useTodoTabsStore } from '../../stores/todo-tabs'
+import { useTodoListStore } from '@stores/todo-list'
+import { useTodoTabsStore } from '@stores/todo-tabs'
 
 const todoList = useTodoListStore()
 const todoTabs = useTodoTabsStore()

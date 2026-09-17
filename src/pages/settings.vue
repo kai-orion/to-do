@@ -110,10 +110,10 @@
 <script setup lang="ts">
 import type { TMaterialContrastLevel, TMaterialVariant } from '@sandlada/mcu-helper'
 import type { MdOutlinedSelect, MdSlider, MdSwitch } from '@material/web/all'
-import Accordion from '../components/accordion/Accordion.vue'
-import Accordions from '../components/accordion/Accordions.vue'
-import Product from '../layouts/Product.vue'
-import { MaterialVariants, useMaterialThemeStore } from '../stores/material-theme'
+import Accordion from '@components/accordion/Accordion.vue'
+import Accordions from '@components/accordion/Accordions.vue'
+import Product from '@layouts/Product.vue'
+import { MaterialVariants, useMaterialThemeStore } from '@stores/material-theme'
 
 const theme = useMaterialThemeStore()
 const themeFormChange = (e: Event) => {
@@ -142,7 +142,7 @@ const deleteWebsiteData = () => {
 </script>
 
 <style scoped>
-@reference "../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 .setting-form {
     display: flex;
     flex-direction: column;

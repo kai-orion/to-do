@@ -33,7 +33,7 @@ export interface IUseIntersectionAnchorReturn {
  * ```vue
  * <script setup lang="ts">
  * import { ref } from 'vue'
- * import { useIntersectionAnchor } from '../composables/useIntersectionAnchor'
+ * import { useIntersectionAnchor } from '@composables/useIntersectionAnchor'
  *
  * const sentinelRef = ref<Element | null>(null)
  * const { isVisible } = useIntersectionAnchor(sentinelRef, { threshold: 0.1 })

@@ -1,4 +1,4 @@
-import { useDocument } from './useDocument'
+import { useDocument } from '@composables/useDocument'
 
 export function useAdoptedStyleSheet() {
 

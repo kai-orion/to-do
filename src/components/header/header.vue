@@ -1,4 +1,31 @@
-@reference "../../styles/tailwind.css";
+<template>
+    <header class="header">
+        <span
+            v-if="$slots.start"
+            class="start"
+        >
+            <slot name="start"></slot>
+        </span>
+
+        <span class="headline">{{ headline }}</span>
+
+        <span
+            v-if="$slots.end"
+            class="end"
+        >
+            <slot name="end"></slot>
+        </span>
+    </header>
+</template>
+
+<script setup lang="ts">
+defineProps<{
+    headline: string
+}>()
+</script>
+
+<style scoped>
+@reference "@styles/tailwind.css";
 .header {
     --header-height: 64px;
     --header-start-width: 48px;
@@ -46,3 +73,4 @@
         grid-column: 1/4;
     }
 }
+</style>

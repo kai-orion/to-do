@@ -8,10 +8,10 @@
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useAdoptedStyleSheet } from './composables/useAdoptedStyleSheet'
-import { useDocument } from './composables/useDocument'
-import { useMaterialThemeStore } from "./stores/material-theme"
-import { useMediaQueryStore } from './stores/media-query'
+import { useAdoptedStyleSheet } from '@composables/useAdoptedStyleSheet'
+import { useDocument } from '@composables/useDocument'
+import { useMaterialThemeStore } from "@stores/material-theme"
+import { useMediaQueryStore } from '@stores/media-query'
 
 const mediaQuery = useMediaQueryStore()
 const document = useDocument()

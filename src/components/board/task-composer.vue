@@ -144,7 +144,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@reference "../../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 /* ---- inline composer (add / edit) ---- */
 .composer {

@@ -1,7 +1,7 @@
 import { type RouteRecordRaw, type Router, createRouter, createWebHashHistory } from 'vue-router'
 
-import Index from '../pages/index.vue'
-import Settings from '../pages/settings.vue'
+import Index from '@pages/index.vue'
+import Settings from '@pages/settings.vue'
 
 const routes: RouteRecordRaw[] = [
     {

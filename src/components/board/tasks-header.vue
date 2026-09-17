@@ -35,7 +35,7 @@ const emit = defineEmits<{
 </script>
 
 <style scoped>
-@reference "../../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 .tasks-header {
     display: flex;

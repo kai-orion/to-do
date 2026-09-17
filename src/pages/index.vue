@@ -196,23 +196,23 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, useTemplateRef } from 'vue'
-import TaskDialogs from '../components/board/task-dialogs.vue'
-import TaskItem from '../components/board/task-item.vue'
-import TaskListCard from '../components/board/task-list-card.vue'
-import TasksHeader from '../components/board/tasks-header.vue'
-import TaskSidebar from '../components/task-sidebar/TaskSidebar.vue'
-import { useBoardDialogs, type IDialogApi } from '../composables/useBoardDialogs'
-import { useBoardDrag } from '../composables/useBoardDrag'
-import { useBoardView } from '../composables/useBoardView'
-import { useComposers } from '../composables/useComposers'
-import { useIntersectionAnchor } from '../composables/useIntersectionAnchor.js'
-import { useMasonry } from '../composables/useMasonry'
-import Product from '../layouts/Product.vue'
-import { useMaterialThemeStore } from '../stores/material-theme.js'
-import { useMediaQueryStore } from '../stores/media-query'
-import { useNavigationStore } from '../stores/navigation'
-import { useTodoListStore, type ITodo } from '../stores/todo-list'
-import { useTodoTabsStore } from '../stores/todo-tabs'
+import TaskDialogs from '@components/board/task-dialogs.vue'
+import TaskItem from '@components/board/task-item.vue'
+import TaskListCard from '@components/board/task-list-card.vue'
+import TasksHeader from '@components/board/tasks-header.vue'
+import TaskSidebar from '@components/task-sidebar/TaskSidebar.vue'
+import { useBoardDialogs, type IDialogApi } from '@composables/useBoardDialogs'
+import { useBoardDrag } from '@composables/useBoardDrag'
+import { useBoardView } from '@composables/useBoardView'
+import { useComposers } from '@composables/useComposers'
+import { useIntersectionAnchor } from '@composables/useIntersectionAnchor'
+import { useMasonry } from '@composables/useMasonry'
+import Product from '@layouts/Product.vue'
+import { useMaterialThemeStore } from '@stores/material-theme'
+import { useMediaQueryStore } from '@stores/media-query'
+import { useNavigationStore } from '@stores/navigation'
+import { useTodoListStore, type ITodo } from '@stores/todo-list'
+import { useTodoTabsStore } from '@stores/todo-tabs'
 
 const todoList = useTodoListStore()
 const todoTabs = useTodoTabsStore()
@@ -521,7 +521,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@reference "../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 .tasks-drawer {
     width: 260px;

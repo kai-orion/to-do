@@ -23,23 +23,32 @@
         "isolatedDeclarations": false,
         "strict": true,
         "paths": {
+            "@/*": [
+                "./src/*"
+            ],
             "@components/*": [
-                "/src/components/*"
+                "./src/components/*"
+            ],
+            "@composables/*": [
+                "./src/composables/*"
+            ],
+            "@layouts/*": [
+                "./src/layouts/*"
             ],
             "@pages/*": [
-                "/src/pages/*"
+                "./src/pages/*"
             ],
             "@router/*": [
-                "/src/router/*"
+                "./src/router/*"
             ],
-            "@services/*": [
-                "/src/services/*"
+            "@stores/*": [
+                "./src/stores/*"
             ],
             "@styles/*": [
-                "/src/styles/*"
+                "./src/styles/*"
             ],
             "@utils/*": [
-                "/src/utils/*"
+                "./src/utils/*"
             ],
         },
         "types": [

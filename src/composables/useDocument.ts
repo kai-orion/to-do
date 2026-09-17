@@ -39,7 +39,7 @@ export interface IUseDocumentReturn {
  * ```vue
  * <script setup lang="ts">
  * import { watchEffect } from 'vue'
- * import { useDocument } from '../composables/useDocument'
+ * import { useDocument } from '@composables/useDocument'
  *
  * const { element, isSupported } = useDocument()
  *

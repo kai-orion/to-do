@@ -1,7 +1,7 @@
 import { computed, reactive, ref } from 'vue'
-import type { SortMode } from '../components/board/task-list-card.vue'
-import { useTodoListStore, type ITodo } from '../stores/todo-list'
-import { useTodoTabsStore } from '../stores/todo-tabs'
+import type { SortMode } from '@components/board/task-list-card.vue'
+import { useTodoListStore, type ITodo } from '@stores/todo-list'
+import { useTodoTabsStore } from '@stores/todo-tabs'
 
 export type IPopState =
     | { type: 'list', name: string }

@@ -3,7 +3,7 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 
-@import "./preflight.css" layer(base);
+@import "@styles/preflight.css" layer(base);
 
 @import "@sandlada/material-design-css/preset.css";
 @import "@sandlada/material-design-css/prebuilt-colors/tonal-spot/h0-2025.css";

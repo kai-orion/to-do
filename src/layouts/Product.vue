@@ -50,11 +50,11 @@
 </template>
 
 <script setup lang="ts">
-import { Header } from '../components/header/header'
-import { NavigationDrawer } from '../components/navigation-drawer/navigation-drawer'
-import { useMaterialThemeStore } from '../stores/material-theme'
-import { useMediaQueryStore } from '../stores/media-query'
-import { useNavigationStore } from '../stores/navigation'
+import Header from '@components/header/header.vue'
+import NavigationDrawer from '@components/navigation-drawer/navigation-drawer.vue'
+import { useMaterialThemeStore } from '@stores/material-theme'
+import { useMediaQueryStore } from '@stores/media-query'
+import { useNavigationStore } from '@stores/navigation'
 
 const theme = useMaterialThemeStore()
 const navigation = useNavigationStore()
@@ -62,7 +62,7 @@ const mediaQuery = useMediaQueryStore()
 </script>
 
 <style scoped>
-@reference "../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 .product-page-layout {
     &>.content-view {

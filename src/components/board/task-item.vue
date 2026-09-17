@@ -265,9 +265,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ITodo } from '../../stores/todo-list';
-import type { ITodoTab } from '../../stores/todo-tabs';
-import TaskComposer from './task-composer.vue';
+import type { ITodo } from '@stores/todo-list';
+import type { ITodoTab } from '@stores/todo-tabs';
+import TaskComposer from '@components/board/task-composer.vue';
 
 // Pure component: no Pinia, no router. Subtasks stay as inline
 // <template v-for> here instead of a separate subtask component.
@@ -326,7 +326,7 @@ const emit = defineEmits<{
 </script>
 
 <style scoped>
-@reference "../../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 /* ---- task rows ---- */
 .task-row {

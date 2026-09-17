@@ -142,7 +142,7 @@
 <script setup lang="ts">
 import type { MdDialog } from '@material/web/all';
 import { onMounted, ref } from 'vue';
-import type { ITodoTab } from '../../stores/todo-tabs';
+import type { ITodoTab } from '@stores/todo-tabs';
 
 // Pure component: no Pinia, no router. Dialog field values flow out via
 // emits; show/close is exposed so the top-level Layout (index.vue) —
@@ -217,7 +217,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@reference "../../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 
 /* ---- dialogs ---- */
 .create-list-dialog {

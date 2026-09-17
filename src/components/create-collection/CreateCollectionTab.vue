@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import type { MdDialog, MdOutlinedTextField, MdPrimaryTab } from '@material/web/all'
 import { onMounted, ref } from 'vue'
-import { useTodoTabsStore } from '../../stores/todo-tabs'
+import { useTodoTabsStore } from '@stores/todo-tabs'
 
 const todoTabs = useTodoTabsStore()
 

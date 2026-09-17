@@ -54,7 +54,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@reference "../../styles/tailwind.css";
+@reference "@styles/tailwind.css";
 .accordion {
     display: grid;
     grid-template-columns: 1fr;

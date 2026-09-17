@@ -1,6 +1,6 @@
 import { computed, ref, type Ref } from 'vue'
-import { useTodoListStore } from '../stores/todo-list'
-import { useTodoTabsStore } from '../stores/todo-tabs'
+import { useTodoListStore } from '@stores/todo-list'
+import { useTodoTabsStore } from '@stores/todo-tabs'
 
 export interface IDialogApi {
     showCreateList: () => void

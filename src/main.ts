@@ -1,17 +1,17 @@
 // Vue
 import { createApp } from 'vue'
-import App from './App.vue'
+import App from '@/App.vue'
 
 /**
  * Vue-Router
  */
-import { globalRouter } from './router/index'
+import { globalRouter } from '@router/index'
 
 /**
  * Tailwindcss
  */
-import './styles/scrollbar.css'
-import './styles/tailwind.css'
+import '@styles/scrollbar.css'
+import '@styles/tailwind.css'
 
 /**
  * Google's Material Design
