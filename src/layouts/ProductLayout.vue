@@ -179,6 +179,5 @@ html:is([expanded], [large], [extra-large]) .product-page-layout {
 :global(html:is([expanded], [large], [extra-large]) .product-page-layout > header) {
     position: sticky;
     top: 0;
-    z-index: 10;
 }
 </style>

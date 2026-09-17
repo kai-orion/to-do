@@ -39,7 +39,9 @@
         </template>
 
         <template #end>
-            <LinkToSettingPageButton @click="() => { settingDialog.toggle(true); navigation.updateOpen(false) }">
+            <LinkToSettingPageButton
+                @click="() => { settingDialog.toggle(true); if (mediaQuery.currentBreakpoint === 'compact') { navigation.updateOpen(false) } }"
+            >
             </LinkToSettingPageButton>
         </template>
     </TaskSidebar>

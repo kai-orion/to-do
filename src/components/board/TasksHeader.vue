@@ -40,6 +40,7 @@ const emit = defineEmits<{
 .tasks-header {
     display: flex;
     align-items: center;
+    z-index: 1;
     gap: 4px;
     height: 64px;
     max-height: 64px;
