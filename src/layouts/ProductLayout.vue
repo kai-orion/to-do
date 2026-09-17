@@ -1,25 +1,7 @@
 <template>
     <div class="product-page-layout">
 
-        <template v-if="!$slots.header">
-            <Header headline="Todo">
-                <template #start>
-                    <md-icon-button @click="() => navigation.updateOpen(!navigation.isOpen)">
-                        <md-icon>{{ navigation.isOpen ? 'menu_open' : 'menu' }}</md-icon>
-                    </md-icon-button>
-                </template>
-
-                <template #end>
-                    <md-icon-button @click="() => theme.updateIsDark(!theme.isDark)">
-                        <md-icon>{{ theme.isDark ? 'light_mode' : 'dark_mode' }}</md-icon>
-                    </md-icon-button>
-                </template>
-            </Header>
-        </template>
-        <template v-else>
-            <slot name="header"></slot>
-        </template>
-
+        <slot name="header"></slot>
 
         <main
             class="content-view"
@@ -30,12 +12,7 @@
             </span>
 
             <span class="navigation-drawer">
-                <template v-if="!$slots['navigation-drawer']">
-                    <NavigationDrawerLayout></NavigationDrawerLayout>
-                </template>
-                <template v-else>
-                    <slot name="navigation-drawer"></slot>
-                </template>
+                <slot name="navigation-drawer"></slot>
             </span>
 
         </main>
@@ -45,10 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import Header from '@components/header/Header.vue'
-import NavigationDrawerLayout from '@layouts/NavigationDrawerLayout.vue'
-import { useMaterialThemeStore } from '@stores/material-theme'
-import { useNavigationStore } from '@stores/navigation'
+import { useMaterialThemeStore } from '@stores/material-theme';
+import { useNavigationStore } from '@stores/navigation';
 
 const theme = useMaterialThemeStore()
 const navigation = useNavigationStore()
@@ -105,8 +80,7 @@ const navigation = useNavigationStore()
             @apply bg-surface;
         }
 
-        &>.navigation-drawer {
-        }
+        &>.navigation-drawer {}
 
         &:not(.nav-open)>.content {
             @apply ease-emphasized-accelerate duration-200;
@@ -126,11 +100,11 @@ const navigation = useNavigationStore()
    Breakpoints arrive as attributes on <html> from the media-query store —
    no hardcoded px here. The content element carries this component's scoped
    attribute, so the global html prefix composes with scoped matching. */
-:global(html:not([compact])) .product-page-layout > .content-view {
+:global(html:not([compact])) .product-page-layout>.content-view {
     --content-view-content-margin: 8px;
 }
 
-:global(html:not([compact])) .product-page-layout > .content-view > .content {
+:global(html:not([compact])) .product-page-layout>.content-view>.content {
     margin-top: 0px;
     margin-bottom: var(--content-view-content-margin);
     margin-left: var(--content-view-content-margin);
@@ -138,7 +112,7 @@ const navigation = useNavigationStore()
     border-radius: 28px;
 }
 
-:global(html:not([compact])) .product-page-layout > .content-view > .navigation-drawer {
+:global(html:not([compact])) .product-page-layout>.content-view>.navigation-drawer {
     margin-top: 0px;
     margin-bottom: var(--content-view-content-margin);
     margin-left: 0px;
