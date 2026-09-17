@@ -1,45 +1,48 @@
 <template>
 
-    <div class="tasks-drawer">
-        <TaskSidebar
-            :modal="isModal"
-            :open="navigation.isOpen"
-            @scrim-click="() => navigation.updateOpen(false)"
-        >
-            <template #fab>
-                <NewTaskFab @click="() => emit('create-task')"></NewTaskFab>
-            </template>
+    <TaskSidebar
+        :modal="isModal"
+        :open="navigation.isOpen"
+        @scrim-click="() => navigation.updateOpen(false)"
+    >
+        <template #fab>
+            <NewTaskFab @click="() => emit('create-task')"></NewTaskFab>
+        </template>
 
-            <template #tabs>
-                <Tab
-                    :active="props.activeView === 'all'"
-                    @click="() => emit('select-all')"
-                    label="All Tasks"
-                >
-                    <md-icon class="view-icon">task_alt</md-icon>
-                </Tab>
-                <Tab
-                    :active="props.activeView === 'starred'"
-                    @click="() => emit('select-starred')"
-                    label="Starred"
-                >
-                    <md-icon class="view-icon">star</md-icon>
-                </Tab>
-            </template>
+        <template #tabs>
+            <Tab
+                :active="props.activeView === 'all'"
+                @click="() => emit('select-all')"
+                label="All Tasks"
+            >
+                <md-icon class="view-icon">task_alt</md-icon>
+            </Tab>
+            <Tab
+                :active="props.activeView === 'starred'"
+                @click="() => emit('select-starred')"
+                label="Starred"
+            >
+                <md-icon class="view-icon">star</md-icon>
+            </Tab>
+        </template>
 
-            <template #lists>
-                <Lists
-                    :tabs="tabs"
-                    :is-lists-collapsed="isListsCollapsed"
-                    :visible="visible"
-                    :counts="counts"
-                    @toggle-list="(label) => emit('toggle-list', label)"
-                    @toggle-lists-collapsed="() => emit('toggle-lists-collapsed')"
-                ></Lists>
-                <NewListButton @click="() => emit('create-list')"></NewListButton>
-            </template>
-        </TaskSidebar>
-    </div>
+        <template #lists>
+            <Lists
+                :tabs="tabs"
+                :is-lists-collapsed="isListsCollapsed"
+                :visible="visible"
+                :counts="counts"
+                @toggle-list="(label) => emit('toggle-list', label)"
+                @toggle-lists-collapsed="() => emit('toggle-lists-collapsed')"
+            ></Lists>
+            <NewListButton @click="() => emit('create-list')"></NewListButton>
+        </template>
+
+        <template #end>
+            <LinkToSettingPageButton></LinkToSettingPageButton>
+        </template>
+    </TaskSidebar>
+
 </template>
 
 <script setup lang="ts">
@@ -53,10 +56,8 @@ import { useNavigationStore } from '@stores/navigation'
 import { useTodoListStore } from '@stores/todo-list'
 import type { ITodoTab } from '@stores/todo-tabs'
 import { computed } from 'vue'
+import LinkToSettingPageButton from './LinkToSettingPageButton.vue'
 
-// Layout: owns drawer chrome (modal vs docked) + sidebar counts via stores.
-// Filter state (tabs/visible/activeView/collapsed) arrives via props so the
-// page stays the single source for shared filters; intents leave via emits.
 const props = defineProps<{
     tabs: Array<ITodoTab>
     visible: Record<string, boolean>

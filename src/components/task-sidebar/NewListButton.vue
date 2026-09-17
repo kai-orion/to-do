@@ -2,6 +2,7 @@
     <button
         type="button"
         class="new-list-row"
+        tabindex="0"
     >
         <md-icon>add</md-icon>
         <span class="label">New List</span>
@@ -29,7 +30,6 @@
     padding-inline: 12px 20px;
     margin-block: 12px;
     border-radius: 999px;
-    overflow: hidden;
     cursor: pointer;
     user-select: none;
 
@@ -38,6 +38,11 @@
     --md-icon-size: 20px;
 
     & .label {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+
         @apply label-small;
     }
 }

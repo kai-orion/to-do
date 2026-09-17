@@ -1,18 +1,48 @@
 <template>
     <aside :class="rootClasses">
+        <md-elevation></md-elevation>
+
         <div class="fab">
             <slot name="fab"></slot>
         </div>
 
-        <nav class="tabs">
-            <slot name="tabs"></slot>
-        </nav>
+        <div
+            class="scrollable"
+            ref="scrollable"
+        >
+            <span
+                ref="top-anchor"
+                class="top-anchor"
+                aria-hidden="true"
+            ></span>
 
-        <div class="lists">
-            <slot name="lists"></slot>
+            <span
+                class="top-divider"
+                aria-hidden="true"
+            ></span>
+
+            <nav class="tabs">
+                <slot name="tabs"></slot>
+            </nav>
+
+            <div class="lists">
+                <slot name="lists"></slot>
+            </div>
+
+            <span
+                class="bottom-divider"
+                aria-hidden="true"
+            ></span>
+            <span
+                ref="bottom-anchor"
+                class="bottom-anchor"
+                aria-hidden="true"
+            ></span>
         </div>
 
-        <md-elevation></md-elevation>
+        <span class="end">
+            <slot name="end"></slot>
+        </span>
     </aside>
     <span
         class="scrim"
@@ -22,7 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type ClassValue } from 'vue';
+import { useIntersectionAnchor } from '@/composables/useIntersectionAnchor';
+import { computed, useTemplateRef, type ClassValue } from 'vue';
 
 const props = withDefaults(defineProps<{
     open?: boolean
@@ -36,11 +67,26 @@ const emits = defineEmits<{
     (e: 'scrim-click'): void
 }>()
 
+const scrollableElementRef = useTemplateRef<HTMLElement>('scrollable')
+const topAnchorElementRef = useTemplateRef<HTMLElement>('top-anchor')
+const bottomAnchorElementRef = useTemplateRef<HTMLElement>('bottom-anchor')
+
+const topAnchor = useIntersectionAnchor(topAnchorElementRef, {
+    root: scrollableElementRef
+})
+const bottomAnchor = useIntersectionAnchor(bottomAnchorElementRef, {
+    root: scrollableElementRef
+})
+
 const rootClasses = computed<ClassValue>(() => ({
     'sidebar': true,
     'open': props.open,
     'modal': props.modal,
+    'show-top-divider': !topAnchor.isVisible.value,
+    'show-bottom-divider': !bottomAnchor.isVisible.value,
 }))
+
+
 </script>
 
 <style scoped>
@@ -54,7 +100,6 @@ const rootClasses = computed<ClassValue>(() => ({
     flex-direction: column;
     width: 260px;
     height: 100%;
-    padding: 8px 12px 16px 8px;
     gap: 0;
     @apply bg-surface text-on-surface;
 
@@ -138,13 +183,76 @@ const rootClasses = computed<ClassValue>(() => ({
 }
 
 .fab {
-    padding: 8px 8px 20px 8px;
+    margin: 12px 12px 0px;
+}
+
+.scrollable {
+    overflow: auto;
+    overscroll-behavior: contain;
+    min-height: 0;
+    flex: 1 1 auto;
+    position: relative;
+    z-index: 0;
+    box-sizing: border-box;
+    margin: 12px 0px;
+}
+
+:where(.top-anchor, .bottom-anchor) {
+    display: block;
+    visibility: hidden;
+    height: 1px;
+}
+
+:where(.top-divider, .bottom-divider) {
+    display: block;
+    box-sizing: border-box;
+    height: 1px;
+    width: 100%;
+    opacity: 0;
+    transition-duration: 200ms;
+    transition-property: opacity;
+    background: var(--md-sys-color-outline-variant);
+
+    position: sticky;
+    z-index: 1;
+}
+
+.top-divider {
+    top: 0;
+}
+
+.bottom-divider {
+    bottom: 0;
+}
+
+.sidebar.show-top-divider .top-divider {
+    opacity: 1;
+}
+
+.sidebar.show-bottom-divider .bottom-divider {
+    opacity: 1;
 }
 
 .tabs {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: 0 0 12px 0;
+    margin: 0px 12px;
+    box-sizing: border-box;
+}
+
+.lists {
+    margin: 0px 12px;
+    box-sizing: border-box;
+}
+
+.end {
+    position: relative;
+    box-sizing: border-box;
+    margin: 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-sys-measurement-space50);
+    margin-block-start: auto;
 }
 </style>
